@@ -1,0 +1,54 @@
+{
+  "properties": [
+    {
+      "name": "app.s3.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Use S3-compatible object storage (MinIO, AWS S3, etc.)."
+    },
+    {
+      "name": "app.s3.endpoint",
+      "type": "java.lang.String",
+      "description": "Custom S3 endpoint URL, e.g. http://127.0.0.1:9000 for MinIO."
+    },
+    {
+      "name": "app.s3.region",
+      "type": "java.lang.String",
+      "description": "AWS region id (also used by some S3 providers)."
+    },
+    {
+      "name": "app.s3.bucket",
+      "type": "java.lang.String",
+      "description": "Bucket name for uploads."
+    },
+    {
+      "name": "app.s3.access-key",
+      "type": "java.lang.String",
+      "description": "S3 access key."
+    },
+    {
+      "name": "app.s3.secret-key",
+      "type": "java.lang.String",
+      "description": "S3 secret key."
+    },
+    {
+      "name": "app.s3.path-style-access",
+      "type": "java.lang.Boolean",
+      "description": "false for Amazon S3 (virtual-hosted); true for MinIO and custom endpoints."
+    },
+    {
+      "name": "app.s3.public-base-url",
+      "type": "java.lang.String",
+      "description": "Public base URL for browser (no trailing slash), e.g. https://cdn.example.com or http://localhost:9000/bucket."
+    },
+    {
+      "name": "wx.open.appId",
+      "type": "java.lang.String",
+      "description": "Description for wx.open.appId."
+    },
+    {
+      "name": "wx.open.appSecret",
+      "type": "java.lang.String",
+      "description": "Description for wx.open.appSecret."
+    }
+  ]
+}

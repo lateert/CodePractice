@@ -1,0 +1,6 @@
+# IDE / OS at repository root (submodules have their own .gitignore)
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

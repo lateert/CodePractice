@@ -1,0 +1,110 @@
+# Shared Spring Boot defaults (override in profile-specific YAML).
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: code-practice-backend
+  # Active profile (use local for development)
+  profiles:
+    active: local
+  # MVC path matching (legacy Ant style for some routes)
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # Spring Session (Redis)
+  session:
+    store-type: redis
+    # Session TTL (30 days)
+    timeout: 2592000
+    redis:
+      # Новый префикс ключей: старые сессии в Redis сериализованы с классами cn.nexura.* и больше не читаются
+      namespace: code-practice:spring:session
+  # JDBC datasource (override via DB_* env or profile)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/code_practice}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  # Redis
+  redis:
+    database: 1
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    timeout: 5000
+    password: ${REDIS_PASSWORD:}
+  # Elasticsearch (optional, disabled by default)
+#  elasticsearch:
+#    uris: http://43.143.20.63:9200
+#    username: root
+#    password: 123456
+  # Multipart upload limits
+  servlet:
+    multipart:
+      # Max upload size per file
+      max-file-size: 10MB
+server:
+  address: 0.0.0.0
+  port: 8121
+  servlet:
+    context-path: /api
+    # Session cookie max-age (30 days)
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # logical delete field on entities
+      logic-delete-value: 1 # deleted marker
+      logic-not-delete-value: 0 # not deleted marker
+# Remote code sandbox (see code-practice-sandbox)
+codesandbox:
+  type : remote
+
+# Files: local disk (app.file.local-storage-enabled) OR Amazon S3 (app.s3).
+# Amazon S3: app.file.local-storage-enabled=false, app.s3.enabled=true,
+#   app.s3.endpoint= (empty), app.s3.region=eu-central-1 (your region), app.s3.bucket=...,
+#   app.s3.access-key / secret-key = IAM user with s3:PutObject on that bucket,
+#   app.s3.path-style-access=false (default for AWS), app.s3.public-base-url= optional
+#   (empty = https://<bucket>.s3.<region>.amazonaws.com/<key>; or set CloudFront base URL).
+# MinIO override: set endpoint=http://127.0.0.1:9000, path-style-access=true, public-base-url accordingly.
+app:
+  file:
+    local-storage-enabled: false
+    local-storage-root: ${LOCAL_UPLOAD_ROOT:${user.home}/.code-practice/local-uploads}
+  s3:
+    enabled: false
+    endpoint: ${S3_ENDPOINT:}
+    region: ${S3_REGION:us-east-1}
+    bucket: ${S3_BUCKET:}
+    access-key: ${S3_ACCESS_KEY:}
+    secret-key: ${S3_SECRET_KEY:}
+    path-style-access: ${S3_PATH_STYLE:false}
+    public-base-url: ${S3_PUBLIC_BASE_URL:}
+
+auth:
+  jwt:
+    issuer: code-practice-backend
+    secret: ${JWT_SECRET:change_this_to_a_long_random_secret_at_least_32_chars}
+    access-token-minutes: 30
+    refresh-token-days: 14
+    access-cookie-name: cp_access_token
+    refresh-cookie-name: cp_refresh_token
+
+integration:
+  github:
+    oauth:
+      client-id: ${GITHUB_CLIENT_ID:}
+      client-secret: ${GITHUB_CLIENT_SECRET:}
+      redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/user/oauth/github/callback}

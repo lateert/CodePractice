@@ -1,0 +1,77 @@
+# Production profile overrides (set secrets via env / external config).
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: code-practice-backend
+  # MVC path matching
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # Spring Session (Redis)
+  session:
+    store-type: redis
+    # Session TTL (30 days)
+    timeout: 2592000
+    redis:
+      namespace: code-practice:spring:session
+  # JDBC (override DB_* for production)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/code_practice}
+    username: ${DB_USERNAME:code_practice}
+    password: ${DB_PASSWORD:change_me}
+  # Redis
+  redis:
+    database: 1
+    host: ${REDIS_HOST:localhost}
+    port: ${REDIS_PORT:6379}
+    timeout: 5000
+    password: ${REDIS_PASSWORD:}
+  # Elasticsearch (optional)
+  #  elasticsearch:
+  #    uris: http://43.143.20.63:9200
+  #    username: root
+  #    password: 123456
+  # Multipart limits
+  servlet:
+    multipart:
+      # Max file size
+      max-file-size: 10MB
+server:
+  address: 0.0.0.0
+  port: 18121
+  servlet:
+    context-path: /api
+    # Session cookie max-age
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # logical delete field
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+# Объектное хранилище: Amazon S3 (по умолчанию). Переменные: S3_ENABLED=true, S3_BUCKET, S3_REGION,
+# S3_ACCESS_KEY, S3_SECRET_KEY; S3_ENDPOINT пустой; S3_PATH_STYLE=false для AWS; при CloudFront — S3_PUBLIC_BASE_URL.
+# Для MinIO: задать S3_ENDPOINT, S3_PATH_STYLE=true и публичный URL в S3_PUBLIC_BASE_URL.
+app:
+  file:
+    local-storage-enabled: false
+  s3:
+    enabled: ${S3_ENABLED:false}
+    endpoint: ${S3_ENDPOINT:}
+    region: ${S3_REGION:us-east-1}
+    bucket: ${S3_BUCKET:}
+    access-key: ${S3_ACCESS_KEY:}
+    secret-key: ${S3_SECRET_KEY:}
+    path-style-access: ${S3_PATH_STYLE:false}
+    public-base-url: ${S3_PUBLIC_BASE_URL:}
+
+# Remote sandbox
+codesandbox:
+  type : remote

@@ -1,0 +1,62 @@
+
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: code-practice-backend
+  # MVC path matching
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # Spring Session (Redis)
+  session:
+    store-type: redis
+    # Session TTL (30 days)
+    timeout: 2592000
+    redis:
+      namespace: code-practice:spring:session
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://localhost:3306/code_practice}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  # Local Redis
+  redis:
+    database: 1
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    timeout: 5000
+    password: ${REDIS_PASSWORD:}
+
+  servlet:
+    multipart:
+      # Max file size
+      max-file-size: 10MB
+server:
+  address: 0.0.0.0
+  port: 8121
+  servlet:
+    context-path: /api
+    # Session cookie max-age
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+app:
+  file:
+    local-storage-enabled: true
+    local-storage-root: ${LOCAL_UPLOAD_ROOT:${user.home}/.code-practice/local-uploads}
+  s3:
+    enabled: false
+
+# Remote sandbox
+codesandbox:
+  type : remote

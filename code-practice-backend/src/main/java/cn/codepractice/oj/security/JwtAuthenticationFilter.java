@@ -1,0 +1,57 @@
+package cn.codepractice.oj.security;
+
+import io.jsonwebtoken.JwtException;
+import jakarta.annotation.Resource;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.Collections;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    @Resource
+    private JwtTokenService jwtTokenService;
+
+    @Resource
+    private AuthTokenFacade authTokenFacade;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String token = resolveToken(request);
+        if (StringUtils.isNotBlank(token)) {
+            try {
+                JwtTokenPayload payload = jwtTokenService.parseAccessToken(token);
+                JwtUserPrincipal principal = new JwtUserPrincipal(payload.getUserId(), payload.getUserRole());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        principal,
+                        null,
+                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + payload.getUserRole().toUpperCase()))
+                );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (JwtException ignored) {
+                SecurityContextHolder.clearContext();
+            }
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (StringUtils.isNotBlank(authorization) && authorization.startsWith("Bearer ")) {
+            return authorization.substring(7);
+        }
+        return authTokenFacade.readAccessToken(request);
+    }
+}

@@ -1,0 +1,22 @@
+# Test profile (integration tests / CI)
+server:
+  port: 8101
+spring:
+  # JDBC (Testcontainers overrides at runtime where used)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/my_db
+    username: root
+    password: 123456
+  # Redis (embedded or test instance)
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+    timeout: 5000
+    password: 123456
+  # Elasticsearch (optional for tests)
+  elasticsearch:
+    uris: http://localhost:9200
+    username: root
+    password: 123456

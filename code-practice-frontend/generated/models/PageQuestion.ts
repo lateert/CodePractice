@@ -1,0 +1,21 @@
+/* generated using openapi-typescript-codegen -- do no edit */
+/* istanbul ignore file */
+/* tslint:disable */
+/* eslint-disable */
+
+import type { OrderItem } from './OrderItem';
+import type { Question } from './Question';
+
+export type PageQuestion = {
+    records?: Array<Question>;
+    total?: number;
+    size?: number;
+    current?: number;
+    orders?: Array<OrderItem>;
+    optimizeCountSql?: PageQuestion;
+    searchCount?: PageQuestion;
+    optimizeJoinOfCountSql?: boolean;
+    maxLimit?: number;
+    countId?: string;
+    pages?: number;
+};
