@@ -8,14 +8,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Helpers to drain stdout/stderr from a {@link Process}. */
+/** Чтение stdout/stderr дочернего процесса в модель ответа. */
 public class ProcessUtils {
 
     /**
-     * Wait for the process, then capture stdout (and stderr on failure) into an {@link ExecuteMessage}.
+     * Ожидает завершение процесса; при успехе — stdout, при ошибке — stdout и stderr в {@link ExecuteMessage}.
      *
-     * @param runProcess OS process (compile or run)
-     * @param opName      label for logs (e.g. {@code compile})
+     * @param runProcess процесс ОС (компиляция или запуск)
+     * @param opName     метка для логов (например compile)
      */
     public static ExecuteMessage runProcessAndGetMessage(Process runProcess, String opName) {
         ExecuteMessage executeMessage = new ExecuteMessage();

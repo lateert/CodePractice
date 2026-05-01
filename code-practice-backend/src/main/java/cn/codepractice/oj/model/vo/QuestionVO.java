@@ -15,72 +15,45 @@ import java.util.List;
 @Data
 public class QuestionVO implements Serializable {
 
-    /**
-     * id
-     */
+    /** Идентификатор задачи. */
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
-    /**
-     * 
-     */
+    /** Заголовок задачи. */
     private String title;
 
-    /**
-     * 
-     */
+    /** Условие задачи. */
     private String content;
 
-    /**
-     * （json ）
-     */
+    /** Список тегов задачи. */
     private List<String> tags;
 
-    /**
-     * 
-     */
+    /** Количество отправок. */
     private Integer submitNum;
 
-    /**
-     * 
-     */
+    /** Количество принятых решений. */
     private Integer acceptedNum;
 
-    /**
-     * （json ）
-     */
+    /** Ограничения проверки. */
     private JudgeConfig judgeConfig;
 
-    /**
-     * 
-     */
+    /** Количество лайков. */
     private Integer thumbNum;
 
-    /**
-     * 
-     */
+    /** Количество добавлений в избранное. */
     private Integer favourNum;
 
-    /**
-     *  id
-     */
+    /** Идентификатор автора задачи. */
     private Long userId;
 
-    /**
-     * 
-     */
+    /** Данные автора задачи. */
     private UserVO user;
 
 
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * 
-     *
-     * @param questionVO
-     * @return
-     */
+    /** Преобразует `QuestionVO` в сущность `Question`. */
     public static Question voToObj(QuestionVO questionVO) {
         if (questionVO == null) {
             return null;
@@ -99,12 +72,7 @@ public class QuestionVO implements Serializable {
         return question;
     }
 
-    /**
-     * 
-     *
-     * @param question
-     * @return
-     */
+    /** Преобразует сущность `Question` в `QuestionVO`. */
     public static QuestionVO objToVo(Question question) {
         if (question == null) {
             return null;

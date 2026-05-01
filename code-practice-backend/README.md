@@ -51,19 +51,8 @@ mvn -q test
 mvn -q jacoco:report   # отчёт: target/site/jacoco/index.html
 ```
 
-## Вспомогательный скрипт
-
-`scripts/remove_cjk_from_java_comments.py` — удаляет символы CJK **только из комментариев** в `*.java` (строковые литералы не трогает). Опциональный аргумент — корень исходников, например:
-
-```bash
-python scripts/remove_cjk_from_java_comments.py ../code-practice-sandbox/src
-```
 
 ## Связанные репозитории / модули
 
 - `../code-practice-frontend` — SPA (Vue 3, Arco Design, Pinia)
 - `../code-practice-sandbox` — исполнение пользовательского Java в Docker / native шаблоне
-
-## Лицензия и происхождение
-
-Проект развивался от учебного шаблона online judge; текущая кодовая база адаптирована под курсовой проект OBIPVSIT (русский UI, политики доступа, S3, тесты).

@@ -9,12 +9,12 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/** Sandbox HTTP entrypoint (health + {@code /executeCode}). */
+/** HTTP API песочницы: health и {@code /executeCode}. */
 @RestController
 @RequestMapping("/")
 public class MainController {
 
-    /** Header name for shared secret auth. */
+    /** Имя заголовка с общим секретом для вызова executeCode. */
     private static final String AUTH_REQUEST_HEADER = "auth";
 
     private static final String DEFAULT_AUTH_REQUEST_SECRET = "secretKey";

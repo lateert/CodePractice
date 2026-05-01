@@ -7,16 +7,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-/**
- * Spring MVC Json 
- *
- */
+/** Настройка Jackson для REST: Long сериализуется строкой. */
 @Configuration
 public class JsonConfig {
 
-    /**
-     *  Long  json 
-     */
+    /** Регистрация сериализаторов Long / long в JSON. */
     @Bean
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();

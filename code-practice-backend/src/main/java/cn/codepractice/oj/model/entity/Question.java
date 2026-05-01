@@ -15,98 +15,62 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 
- * @TableName question
- */
 @TableName(value ="question")
 @Entity
 @Table(name = "question")
 @Data
 public class Question implements Serializable {
-    /**
-     * id
-     */
+    /** Идентификатор задачи. */
     @Id
     @TableId(type = IdType.ASSIGN_ID)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
-    /**
-     * 
-     */
+    /** Заголовок задачи. */
     private String title;
 
-    /**
-     * 
-     */
+    /** Условие задачи. */
     private String content;
 
-    /**
-     * （json ）
-     */
+    /** Теги задачи в формате JSON-массива. */
     private String tags;
 
-    /**
-     * 
-     */
+    /** Эталонное решение/пояснение. */
     private String answer;
 
-    /**
-     * 
-     */
+    /** Количество отправок. */
     private Integer submitNum;
 
-    /**
-     * 
-     */
+    /** Количество принятых решений. */
     private Integer acceptedNum;
 
-    /**
-     * （json ）
-     */
+    /** Набор тест-кейсов в формате JSON. */
     private String judgeCase;
 
-    /**
-     * （json ）
-     */
+    /** Конфиг ограничений проверки в формате JSON. */
     private String judgeConfig;
 
-    /**
-     * 
-     */
+    /** Количество лайков. */
     private Integer thumbNum;
 
-    /**
-     * 
-     */
+    /** Количество добавлений в избранное. */
     private Integer favourNum;
 
-    /**
-     *  id
-     */
+    /** Идентификатор автора задачи. */
     private Long userId;
 
-    /**
-     * 
-     */
+    /** Имя автора (вычисляемое поле, не хранится в таблице). */
     @TableField(exist = false)
     @Transient
     private String userName;
 
-    /**
-     * 
-     */
+    /** Время создания записи. */
     private Date createTime;
 
-    /**
-     * 
-     */
+    /** Время последнего обновления записи. */
     private Date updateTime;
 
-    /**
-     * 
-     */
+    /** Признак логического удаления. */
     private Integer isDelete;
 
     @TableField(exist = false)

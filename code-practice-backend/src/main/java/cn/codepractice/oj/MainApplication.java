@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-/** Точка входа Spring Boot (Code Practice backend). */
+/** Точка входа Spring Boot для backend-сервиса. */
 @SpringBootApplication
 @MapperScan("cn.codepractice.oj.mapper")
 @EnableScheduling

@@ -44,13 +44,10 @@ public class DefaultJudgeStrategy implements JudgeStrategy {
             }
         }
 
-        // 
-        // String message = judgeInfo.getMessage();
         String judgeConfigStr = question.getJudgeConfig();
         JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
         Long needMemoryLimit = judgeConfig.getMemoryLimit();
         Long needTimeLimit = judgeConfig.getTimeLimit();
-        // 
         if (memory > needMemoryLimit) {
             messageEnum = JudgeInfoMessageEnum.MEMORY_LIMIT_EXCEEDED;
             judgeInfoResponse.setMessage(messageEnum.getValue());

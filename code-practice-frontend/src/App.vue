@@ -12,7 +12,6 @@
 </template>
 
 <style>
-/* Скрываем китайский текст "итого" в пагинации Arco (разные версии библиотеки) */
 .arco-pagination-total-text,
 .arco-pagination-total {
   display: none !important;

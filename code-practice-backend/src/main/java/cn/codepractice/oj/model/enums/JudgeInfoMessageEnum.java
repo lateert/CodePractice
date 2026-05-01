@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** Normalized judge outcome / error label (stored in judge JSON). */
+/** Нормализованные метки результата проверки (хранятся в judge JSON). */
 public enum JudgeInfoMessageEnum {
 
     ACCEPTED("Успешно", "Accepted"),
@@ -30,12 +30,12 @@ public enum JudgeInfoMessageEnum {
         this.value = value;
     }
 
-    /** All machine-readable {@code value} strings (e.g. {@code Accepted}). */
+    /** Все машинные значения поля {@code value} (например, {@code Accepted}). */
     public static List<String> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
     }
 
-    /** Resolve by machine {@code value} string. */
+    /** Поиск enum по машинному значению {@code value}. */
     public static JudgeInfoMessageEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

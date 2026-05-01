@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
 
-/** Upload use-case discriminator (folder / policy under {@code app.file}). */
+/** Сценарий загрузки файла (папка/политика в рамках {@code app.file}). */
 public enum FileUploadBizEnum {
 
     USER_AVATAR("User avatar", "user_avatar");
@@ -19,12 +19,12 @@ public enum FileUploadBizEnum {
         this.value = value;
     }
 
-    /** All {@code value} strings for this enum. */
+    /** Все строковые значения {@code value} для enum. */
     public static List<String> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
     }
 
-    /** Resolve by {@code value} string (e.g. {@code user_avatar}). */
+    /** Поиск enum по строковому {@code value} (например, {@code user_avatar}). */
     public static FileUploadBizEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

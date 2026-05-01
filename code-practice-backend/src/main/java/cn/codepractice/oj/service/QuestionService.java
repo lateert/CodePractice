@@ -11,11 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/**
-* @author peiYP
-* @description 【question()】Service
-* @createDate 2023-12-28 10:35:52
-*/
 public interface QuestionService extends IService<Question> {
 
     /**

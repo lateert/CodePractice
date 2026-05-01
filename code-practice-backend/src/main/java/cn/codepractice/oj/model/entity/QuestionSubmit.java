@@ -9,63 +9,38 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 
- * @author peiyp
- * @TableName question_submit
- */
 @Data
 @TableName(value ="question_submit")
 public class QuestionSubmit implements Serializable {
-    /**
-     * id
-     */
+    /** Идентификатор отправки. */
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-    /**
-     * 
-     */
+    /** Язык программирования отправки. */
     private String language;
 
-    /**
-     * 
-     */
+    /** Исходный код пользователя. */
     private String code;
 
-    /**
-     * （json ）
-     */
+    /** Детали результата проверки в формате JSON. */
     private String judgeInfo;
 
-    /**
-     * （0 - 、1 - 、2 - 、3 - ）
-     */
+    /** Статус проверки (коды из QuestionSubmitStatusEnum). */
     private Integer status;
 
-    /**
-     *  id
-     */
+    /** Идентификатор задачи. */
     private Long questionId;
 
-    /**
-     *  id
-     */
+    /** Идентификатор пользователя. */
     private Long userId;
 
-    /**
-     * 
-     */
+    /** Время создания записи. */
     private Date createTime;
 
-    /**
-     * 
-     */
+    /** Время последнего обновления записи. */
     private Date updateTime;
 
-    /**
-     * 
-     */
+    /** Признак логического удаления. */
     private Integer isDelete;
 
     @TableField(exist = false)

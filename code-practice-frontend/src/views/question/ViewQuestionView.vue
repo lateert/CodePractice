@@ -165,9 +165,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const question = ref<QuestionVO>();
 
-/**
- * Load question by id from route.
- */
+/** Загрузка задачи по id из маршрута. */
 const loadData = async () => {
   const res = await QuestionControllerService.getQuestionVoById2(
     props.id as any

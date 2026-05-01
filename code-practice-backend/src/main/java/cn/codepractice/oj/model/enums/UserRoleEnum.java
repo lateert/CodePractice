@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ObjectUtils;
 
-/** Application role (stored in {@code user.user_role}). */
+/** Роль пользователя приложения (поле {@code user.user_role}). */
 public enum UserRoleEnum {
 
     USER("Пользователь", "user"),
@@ -22,12 +22,12 @@ public enum UserRoleEnum {
         this.value = value;
     }
 
-    /** All role {@code value} strings. */
+    /** Все строковые значения ролей {@code value}. */
     public static List<String> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
     }
 
-    /** Resolve role by persisted {@code value} (e.g. {@code teacher}). */
+    /** Поиск роли по сохранённому {@code value} (например, {@code teacher}). */
     public static UserRoleEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

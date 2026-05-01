@@ -7,7 +7,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
 
-/** Supported programming language for sandbox submission (extensible enum). */
+/** Поддерживаемые языки для отправки в песочницу. */
 public enum QuestionSubmitLanguageEnum {
 
     JAVA("java", "java");
@@ -21,12 +21,12 @@ public enum QuestionSubmitLanguageEnum {
         this.value = value;
     }
 
-    /** Supported language codes for API validation. */
+    /** Допустимые коды языков для валидации API. */
     public static List<String> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
     }
 
-    /** Resolve enum constant by {@code value} string. */
+    /** Поиск enum по строковому {@code value}. */
     public static QuestionSubmitLanguageEnum getEnumByValue(String value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

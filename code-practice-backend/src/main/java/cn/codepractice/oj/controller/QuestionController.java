@@ -39,11 +39,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * 
- *
- * @author peiYP
- */
+/** API задач: отправка кода, операции управления, постраничные списки. */
 @RestController
 @RequestMapping({"/question", "/v1/question"})
 @Slf4j
@@ -77,12 +73,7 @@ public class QuestionController {
     }
 
 
-    /**
-     * 
-     *
-     * @param questionSubmitAddRequest
-     * @param request
-     */
+    /** Отправка решения на проверку (текущий пользователь). */
     @PostMapping("/submit")
     public BaseResponse<Long> doQuestionSubmit(@RequestBody QuestionSubmitAddRequest questionSubmitAddRequest,
                                                HttpServletRequest request) {
@@ -95,13 +86,7 @@ public class QuestionController {
     }
 
 
-    /**
-     * （，、）
-     *
-     * @param questionSubmitQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список своих отправок по фильтрам. */
     @PostMapping("/submit/list/page")
     public BaseResponse<Page<QuestionSubmitVO>> listQuestionSubmitByPage(@RequestBody QuestionSubmitQueryRequest questionSubmitQueryRequest,
                                                                          HttpServletRequest request) {
@@ -119,13 +104,7 @@ public class QuestionController {
         return ResultUtils.success(questionSubmitService.getQuestionSubmitVOPage(questionPage, loginUser));
     }
 
-    /**
-     * 
-     *
-     * @param questionAddRequest
-     * @param request
-     * @return
-     */
+    /** Создание задачи; автор — текущий пользователь. */
     @PostMapping("/add")
     @AuthCheck(mustRoleAny = {UserConstant.ADMIN_ROLE, UserConstant.TEACHER_ROLE})
     public BaseResponse<Long> addQuestion(@RequestBody QuestionAddRequest questionAddRequest, HttpServletRequest request) {
@@ -157,13 +136,7 @@ public class QuestionController {
         return ResultUtils.success(newQuestionId);
     }
 
-    /**
-     * 
-     *
-     * @param deleteRequest
-     * @param request
-     * @return
-     */
+    /** Удаление задачи: автор или администратор. */
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteQuestion(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -171,7 +144,6 @@ public class QuestionController {
         }
         User user = userService.getLoginUser(request);
         long id = deleteRequest.getId();
-        // 
         Question oldQuestion = questionService.getById(id);
         if (oldQuestion == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
@@ -212,10 +184,8 @@ public class QuestionController {
         if (judgeConfig != null) {
             question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
-        // 
         questionService.validQuestion(question, false);
         long id = questionUpdateRequest.getId();
-        // 
         Question oldQuestion = questionService.getById(id);
         ThrowUtils.throwIf(oldQuestion == null, ErrorCode.NOT_FOUND_ERROR);
         User loginUser = userService.getLoginUser(request);
@@ -227,12 +197,7 @@ public class QuestionController {
         return ResultUtils.success(result);
     }
 
-    /**
-     *  id 
-     *
-     * @param id
-     * @return
-     */
+    /** Публичное VO задачи по id. */
     @GetMapping("/get/vo")
     public BaseResponse<QuestionVO> getQuestionVOById(long id, HttpServletRequest request) {
         if (id <= 0) {
@@ -246,10 +211,7 @@ public class QuestionController {
     }
 
     /**
-     *  id 
-     *
-     * @param id
-     * @return
+     * Задача по id: автор и админ/препод видят сущность; остальные — только VO без скрытых полей.
      */
     @GetMapping("/get")
     public BaseResponse<?> getQuestionById(long id, HttpServletRequest request) {
@@ -261,28 +223,19 @@ public class QuestionController {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
-        // /преподаватель
         if (!question.getUserId().equals(loginUser.getId()) && !userService.isAdminOrTeacher(loginUser)) {
             return ResultUtils.success(questionService.getQuestionVO(question, request));
         }
         return ResultUtils.success(question);
     }
 
-    /**
-     * Richardson level 2+: resource-style endpoint.
-     */
+    /** То же, что GET /get, но с id в пути (ресурсный URL). */
     @GetMapping("/{id}")
     public BaseResponse<?> getQuestionByPath(@PathVariable("id") long id, HttpServletRequest request) {
         return getQuestionById(id, request);
     }
 
-    /**
-     * （）
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список VO; для студента — только задачи курсов с записи. */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
             HttpServletRequest request) {
@@ -330,13 +283,7 @@ public class QuestionController {
         return ResultUtils.success(questionService.getQuestionVOPage(questionPage, request));
     }
 
-    /**
-     * 
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список VO задач текущего пользователя. */
     @PostMapping("/my/list/page/vo")
     public BaseResponse<Page<QuestionVO>> listMyQuestionVOByPage(@RequestBody QuestionQueryRequest questionQueryRequest,
             HttpServletRequest request) {
@@ -346,7 +293,6 @@ public class QuestionController {
         User loginUser = userService.getLoginUser(request);
         questionQueryRequest.setUserId(loginUser.getId());
         long size = questionQueryRequest.getPageSize();
-        // 
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<Question> questionPage = questionSpecificationQueryService
                 .queryPageBySpecification(questionQueryRequest, null);
@@ -354,13 +300,7 @@ public class QuestionController {
     }
 
 
-    /**
-     * （）
-     *
-     * @param questionEditRequest
-     * @param request
-     * @return
-     */
+    /** Частичное редактирование задачи автором или админом/преподавателем. */
     @PostMapping("/edit")
     public BaseResponse<Boolean> editQuestion(@RequestBody QuestionEditRequest questionEditRequest, HttpServletRequest request) {
         if (questionEditRequest == null || questionEditRequest.getId() <= 0) {
@@ -380,16 +320,13 @@ public class QuestionController {
         if (judgeConfig != null) {
             question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
-        // 
         questionService.validQuestion(question, false);
         User loginUser = userService.getLoginUser(request);
         long id = questionEditRequest.getId();
-        // 
         Question oldQuestion = questionService.getById(id);
         if (oldQuestion == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
-        // /преподаватель
         if (!oldQuestion.getUserId().equals(loginUser.getId()) && !userService.isAdminOrTeacher(loginUser)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
@@ -397,13 +334,7 @@ public class QuestionController {
         return ResultUtils.success(result);
     }
 
-    /**
-     * （）
-     *
-     * @param questionQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список сущностей задач (админ или преподаватель). */
     @PostMapping("/list/page")
     @AuthCheck(mustRoleAny = {UserConstant.ADMIN_ROLE, UserConstant.TEACHER_ROLE})
     public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest,

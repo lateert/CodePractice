@@ -11,52 +11,32 @@ import cn.codepractice.oj.model.entity.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-/**
- * （）
- *
- */
+/** Публичное представление пользователя для API. */
 @Data
 public class UserVO implements Serializable {
 
-    /**
-     * id
-     */
+    /** Идентификатор пользователя. */
     private Long id;
 
-    /**
-     * 
-     */
+    /** Имя пользователя. */
     private String userName;
 
-    /**
-     * 
-     */
+    /** URL аватара. */
     private String userAvatar;
 
-    /**
-     * 
-     */
+    /** Текст профиля пользователя. */
     private String userProfile;
 
-    /**
-     * ：user/admin/ban
-     */
+    /** Роль пользователя: user/admin/teacher/ban. */
     private String userRole;
 
-    /**
-     * 
-     */
+    /** Время создания учётной записи. */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * 
-     *
-     * @param userVO
-     * @return
-     */
+    /** Преобразует `UserVO` в сущность `User`. */
     public static User voToObj(UserVO userVO) {
         if (userVO == null) {
             return null;
@@ -66,12 +46,7 @@ public class UserVO implements Serializable {
         return user;
     }
 
-    /**
-     * 
-     *
-     * @param user
-     * @return
-     */
+    /** Преобразует сущность `User` в `UserVO`. */
     public static UserVO objToVo(User user) {
         if (user == null) {
             return null;

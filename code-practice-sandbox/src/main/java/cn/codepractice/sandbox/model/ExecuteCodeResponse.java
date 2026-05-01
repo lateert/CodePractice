@@ -7,34 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * @author peiYP
- * @create 2023-12-31 17:56
- **/
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExecuteCodeResponse {
 
-    /**
-     * 
-     */
     private String message;
 
-    /**
-     * 
-     */
     private List<String> output;
 
-    /**
-     * 
-     */
     private JudgeInfo judgeInfo;
 
-    /**
-     * 
-     */
     private Integer status;
 
     // Явные геттеры/сеттеры, чтобы не зависеть от Lombok при компиляции

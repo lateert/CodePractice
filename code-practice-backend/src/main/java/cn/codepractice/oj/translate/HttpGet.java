@@ -16,33 +16,29 @@ import java.security.cert.X509Certificate;
 import java.util.Map;
 
 class HttpGet {
-    protected static final int SOCKET_TIMEOUT = 10000; // 10S
+    protected static final int SOCKET_TIMEOUT = 10000; // 10 с
     protected static final String GET = "GET";
 
     public static String get(String host, Map<String, String> params) {
         try {
-            // SSLContext
             SSLContext sslcontext = SSLContext.getInstance("TLS");
             sslcontext.init(null, new TrustManager[] { myX509TrustManager }, null);
 
             String sendUrl = getUrlWithQueryString(host, params);
 
-            // System.out.println("URL:" + sendUrl);
-
-            URL uri = new URL(sendUrl); // URL
+            URL uri = new URL(sendUrl);
             HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
             if (conn instanceof HttpsURLConnection) {
                 ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
             }
 
-            conn.setConnectTimeout(SOCKET_TIMEOUT); // 
+            conn.setConnectTimeout(SOCKET_TIMEOUT);
             conn.setRequestMethod(GET);
             int statusCode = conn.getResponseCode();
             if (statusCode != HttpURLConnection.HTTP_OK) {
                 System.out.println("HTTP status: " + statusCode);
             }
 
-            // 
             InputStream is = conn.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuilder builder = new StringBuilder();
@@ -53,9 +49,9 @@ class HttpGet {
 
             String text = builder.toString();
 
-            close(br); // 
-            close(is); // 
-            conn.disconnect(); // 
+            close(br);
+            close(is);
+            conn.disconnect();
 
             return text;
         } catch (MalformedURLException e) {
@@ -86,7 +82,7 @@ class HttpGet {
         int i = 0;
         for (String key : params.keySet()) {
             String value = params.get(key);
-            if (value == null) { // key
+            if (value == null) {
                 continue;
             }
 
@@ -114,12 +110,7 @@ class HttpGet {
         }
     }
 
-    /**
-     * URL, %20
-     * 
-     * @param input 
-     * @return URL. , 
-     */
+    /** Кодирование query-значения для URL (UTF-8). */
     public static String encode(String input) {
         if (input == null) {
             return "";

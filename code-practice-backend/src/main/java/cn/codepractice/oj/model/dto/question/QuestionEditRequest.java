@@ -5,48 +5,30 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- *
- * @author peiYP
- */
+
 @Data
 public class QuestionEditRequest implements Serializable {
 
-    /**
-     * id
-     */
+    /** Идентификатор задачи. */
     private Long id;
 
-    /**
-     * 
-     */
+    /** Заголовок задачи. */
     private String title;
 
-    /**
-     * 
-     */
+    /** Условие задачи. */
     private String content;
 
-    /**
-     * （json ）
-     */
+    /** Список тегов. */
     private List<String> tags;
 
-    /**
-     * 
-     */
+    /** Эталонный ответ/пояснение. */
     private String answer;
 
 
-    /**
-     * （json ）
-     */
+    /** Набор тест-кейсов проверки. */
     private List<JudgeCase> judgeCase;
 
-    /**
-     * （json ）
-     */
+    /** Ограничения проверки. */
     private JudgeConfig judgeConfig;
 
 

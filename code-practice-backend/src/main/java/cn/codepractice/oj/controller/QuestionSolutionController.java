@@ -27,11 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 
- *
- * @author peiYP
- */
 @RestController
 @RequestMapping({"/question/solution", "/v1/question/solution"})
 @Slf4j
@@ -72,8 +67,6 @@ public class QuestionSolutionController {
             questionSolution.setTags(JSONUtil.toJsonStr(tags));
         }
 
-//        questionSolution.setFavourNum(0);
-//        questionSolution.setThumbNum(0);
         boolean result = questionSolutionService.save(questionSolution);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         long newSolutionId = questionSolution.getSolutionId();

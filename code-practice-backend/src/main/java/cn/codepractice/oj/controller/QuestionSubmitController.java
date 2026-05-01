@@ -25,11 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * 
- *
- * @author peiyp
- */
 @RestController
 @RequestMapping({"/question_submit", "/v1/question_submit"})
 @Slf4j

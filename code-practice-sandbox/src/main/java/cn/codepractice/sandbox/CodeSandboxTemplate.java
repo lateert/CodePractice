@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** Shared compile/run/cleanup steps for native-style sandboxes. */
+/** Общие шаги компиляции, запуска и очистки для нативной песочницы. */
 public abstract class CodeSandboxTemplate implements CodeSandbox {
 
     private static final String GLOBAL_CODE_DIR_NAME = "tempCode";
@@ -23,7 +23,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
 
     private static final long TIME_OUT = 5000L;
 
-    /** Write user Java source under a per-run temp directory. */
+    /** Сохраняет исходник пользователя во временный каталог на один запуск. */
     protected File saveCodeToFile(String code) {
 
         String userDir = System.getProperty("user.dir");
@@ -38,7 +38,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
         return FileUtil.writeUtf8String(code, userCodePath);
     }
 
-    /** Run {@code javac} on the saved source file. */
+    /** Запуск javac для сохранённого файла. */
     protected ExecuteMessage compileFile(File userCodeFile) {
         // Компилируем с release 11 для совместимости с локальным JDK sandbox.
         // Скомпилированные классы корректно запускаются и в более новых JRE (например, Java 17).
@@ -58,7 +58,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
 
     }
 
-    /** Run compiled {@code Main} for each stdin line in {@code inputList}. */
+    /** Запуск скомпилированного Main для каждой строки входных данных из inputList. */
     protected List<ExecuteMessage> runFile(File userCodeFile, List<String> inputList) {
         String userCodeParentPath = userCodeFile.getParentFile().getAbsolutePath();
 
@@ -99,7 +99,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
         return executeMessageList;
     }
 
-    /** Merge per-case stdout into API response and derive judge status. */
+    /** Собирает вывод по тест-кейсам в ответ API и статус проверки. */
     protected ExecuteCodeResponse getOutputResponse(List<ExecuteMessage> executeMessageList) {
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
         ArrayList<String> outputList = new ArrayList<>();
@@ -135,7 +135,7 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
         return executeCodeResponse;
     }
 
-    /** Remove temp directory that contained user sources. */
+    /** Удаляет временный каталог с исходниками пользователя. */
     protected boolean deleteFile(File userCodeFile) {
         if (userCodeFile.getParentFile() != null) {
             String userCodeParentPath = userCodeFile.getParentFile().getAbsolutePath();

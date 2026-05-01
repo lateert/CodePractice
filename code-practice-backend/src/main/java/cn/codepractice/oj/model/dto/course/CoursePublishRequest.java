@@ -9,9 +9,7 @@ public class CoursePublishRequest implements Serializable {
 
     private Long courseId;
 
-    /**
-     * true -> publish, false -> close access
-     */
+    /** true — опубликовать курс, false — закрыть доступ. */
     private Boolean published;
 
     private static final long serialVersionUID = 1L;

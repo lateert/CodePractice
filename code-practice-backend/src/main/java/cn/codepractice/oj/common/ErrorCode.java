@@ -1,6 +1,5 @@
 package cn.codepractice.oj.common;
 
-/** Application-wide numeric API error codes with default Russian messages. */
 public enum ErrorCode {
 
     SUCCESS(0, "ok"),

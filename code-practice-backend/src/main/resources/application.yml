@@ -1,25 +1,24 @@
-# Shared Spring Boot defaults (override in profile-specific YAML).
+# Общие настройки Spring Boot.
 spring:
   main:
     allow-circular-references: true
   application:
     name: code-practice-backend
-  # Active profile (use local for development)
+  # Активный профиль
   profiles:
     active: local
-  # MVC path matching (legacy Ant style for some routes)
+  # Сопоставление путей MVC
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  # Spring Session (Redis)
+  # Spring Session в Redis
   session:
     store-type: redis
-    # Session TTL (30 days)
+    # TTL сессии (30 суток)
     timeout: 2592000
     redis:
-      # Новый префикс ключей: старые сессии в Redis сериализованы с классами cn.nexura.* и больше не читаются
       namespace: code-practice:spring:session
-  # JDBC datasource (override via DB_* env or profile)
+  # Источник JDBC
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL:jdbc:mysql://localhost:3306/code_practice}
@@ -33,29 +32,29 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
-  # Redis
+  # Подключение к Redis
   redis:
     database: 1
     host: ${REDIS_HOST:localhost}
     port: ${REDIS_PORT:6379}
     timeout: 5000
     password: ${REDIS_PASSWORD:}
-  # Elasticsearch (optional, disabled by default)
+  # Elasticsearch (опционально, по умолчанию выключен)
 #  elasticsearch:
 #    uris: http://43.143.20.63:9200
 #    username: root
 #    password: 123456
-  # Multipart upload limits
+  # Лимиты multipart-загрузки
   servlet:
     multipart:
-      # Max upload size per file
+      # Максимальный размер одного файла
       max-file-size: 10MB
 server:
   address: 0.0.0.0
   port: 8121
   servlet:
     context-path: /api
-    # Session cookie max-age (30 days)
+    # max-age cookie сессии (30 суток)
     session:
       cookie:
         max-age: 2592000
@@ -65,20 +64,13 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: isDelete # logical delete field on entities
-      logic-delete-value: 1 # deleted marker
-      logic-not-delete-value: 0 # not deleted marker
-# Remote code sandbox (see code-practice-sandbox)
+      logic-delete-field: isDelete # поле логического удаления в сущностях
+      logic-delete-value: 1 # значение «удалено»
+      logic-not-delete-value: 0 # значение «не удалено»
+# Удалённая песочница кода (сервис code-practice-sandbox)
 codesandbox:
   type : remote
 
-# Files: local disk (app.file.local-storage-enabled) OR Amazon S3 (app.s3).
-# Amazon S3: app.file.local-storage-enabled=false, app.s3.enabled=true,
-#   app.s3.endpoint= (empty), app.s3.region=eu-central-1 (your region), app.s3.bucket=...,
-#   app.s3.access-key / secret-key = IAM user with s3:PutObject on that bucket,
-#   app.s3.path-style-access=false (default for AWS), app.s3.public-base-url= optional
-#   (empty = https://<bucket>.s3.<region>.amazonaws.com/<key>; or set CloudFront base URL).
-# MinIO override: set endpoint=http://127.0.0.1:9000, path-style-access=true, public-base-url accordingly.
 app:
   file:
     local-storage-enabled: false

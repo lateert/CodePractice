@@ -15,47 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
-* @author 86188
-* @description 【question_submit()】Service
-* @createDate 2023-12-28 10:36:33
-*/
 public interface QuestionSubmitService extends IService<QuestionSubmit> {
 
-    /**
-     * 
-     *
-     * @param questionId
-     * @param loginUser
-     * @return
-     */
+    /** Создаёт запись отправки и ставит задачу в очередь проверки. */
     long doQuestionSubmit(QuestionSubmitAddRequest questionId, User loginUser);
 
-
-    /**
-     * 
-     *
-     * @param questionQueryRequest
-     * @return
-     */
+    /** Построение условий выборки по полям запроса. */
     QueryWrapper<QuestionSubmit> getQueryWrapper(QuestionSubmitQueryRequest questionQueryRequest);
 
-    /**
-     * 
-     *
-     * @param questionSubmit
-     * @param loginUser
-     * @return
-     */
+    /** VO одной отправки с учётом прав текущего пользователя. */
     QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser);
 
-    /**
-     * 
-     *
-     * @param questionPage
-     * @param loginUser
-     * @return
-     */
+    /** Постраничный список VO отправок. */
     Page<QuestionSubmitVO> getQuestionSubmitVOPage(Page<QuestionSubmit> questionPage, User loginUser);
 
 }

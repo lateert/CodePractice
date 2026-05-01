@@ -9,9 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Запись пользователя на курс
- */
+/** Факт записи пользователя на курс. */
 @Data
 @TableName(value = "enrollment")
 public class Enrollment implements Serializable {
@@ -19,14 +17,10 @@ public class Enrollment implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-    /**
-     * Курс
-     */
+    /** Идентификатор курса. */
     private Long courseId;
 
-    /**
-     * Пользователь
-     */
+    /** Идентификатор пользователя. */
     private Long userId;
 
     /**

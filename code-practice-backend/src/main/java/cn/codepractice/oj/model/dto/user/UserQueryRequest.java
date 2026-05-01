@@ -5,46 +5,29 @@ import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-/**
- * 
- *
- */
+/** Параметры фильтрации и пагинации списка пользователей. */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class UserQueryRequest extends PageRequest implements Serializable {
-    /**
-     * id
-     */
+    /** Идентификатор пользователя. */
     private Long id;
 
-    /**
-     * id
-     */
+    /** UnionID внешнего провайдера. */
     private String unionId;
 
-    /**
-     * openId
-     */
+    /** OpenID внешнего провайдера. */
     private String mpOpenId;
 
-    /**
-     * （，）
-     */
+    /** Подстрока в логине пользователя. */
     private String userAccount;
 
-    /**
-     * 
-     */
+    /** Подстрока в имени пользователя. */
     private String userName;
 
-    /**
-     * 
-     */
+    /** Подстрока в профиле пользователя. */
     private String userProfile;
 
-    /**
-     * ：user/admin/ban
-     */
+    /** Роль пользователя: user/admin/teacher/ban. */
     private String userRole;
 
     private static final long serialVersionUID = 1L;

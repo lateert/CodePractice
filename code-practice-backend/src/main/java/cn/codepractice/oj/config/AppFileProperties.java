@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "app.file")
 public class AppFileProperties {
 
-    /** Если true — файлы пишутся на диск и отдаются по GET /file/local/** */
+    /** Если `true`, файлы пишутся на диск и отдаются по маршруту `/file/local/**`. */
     private boolean localStorageEnabled = false;
 
     /** Корневая папка для {@link #localStorageEnabled} */

@@ -180,7 +180,7 @@ const form = reactive({
 const dataList = ref([]);
 
 const props = defineProps({
-  // props: questionId from parent
+  /** id задачи с родительского компонента */
   questionId: String,
 });
 
@@ -245,7 +245,7 @@ const onAnswerChange = (value: string) => {
 };
 
 const publishTheSolution = async () => {
-  // bind solution to questionId from props
+  // привязка разбора к questionId из props
   const { questionId } = toRefs(props);
   const res =
     await QuestionSolutionControllerService.addQuestion({

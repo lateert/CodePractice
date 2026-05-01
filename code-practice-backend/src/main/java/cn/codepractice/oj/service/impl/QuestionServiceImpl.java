@@ -35,11 +35,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
-* @author peiYP
-* @description 【question()】Service
-* @createDate 2023-12-28 10:35:52
-*/
 @Service
 public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     implements QuestionService{
@@ -231,7 +226,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
 
-        // questionId
+        // id задач из текущей страницы
         List<Long> questionIds = questionList.stream()
                 .map(Question::getId)
                 .collect(Collectors.toList());

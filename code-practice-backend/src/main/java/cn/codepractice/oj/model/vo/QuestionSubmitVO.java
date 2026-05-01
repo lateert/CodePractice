@@ -13,59 +13,37 @@ import java.util.List;
 @Data
 public class QuestionSubmitVO implements Serializable {
 
-    /**
-     * id
-     */
+    /** Идентификатор отправки. */
     private Long id;
 
-    /**
-     * 
-     */
+    /** Язык программирования отправки. */
     private String language;
 
-    /**
-     * 
-     */
+    /** Исходный код пользователя. */
     private String code;
 
-    /**
-     * （json ）
-     */
+    /** Детали проверки. */
     private JudgeInfo judgeInfo;
 
-    /**
-     * （0 - 、1 - 、2 - 、3 - ）
-     */
+    /** Статус проверки (коды из `QuestionSubmitStatusEnum`). */
     private Integer status;
 
-    /**
-     * 
-     */
+    /** Текстовое представление статуса. */
     private String statusStr;
 
-    /**
-     *  id
-     */
+    /** Идентификатор задачи. */
     private Long questionId;
 
-    /**
-     *  id
-     */
+    /** Идентификатор пользователя. */
     private Long userId;
 
-    /**
-     * 
-     */
+    /** Имя пользователя. */
     private String userName;
 
-    /**
-     * 
-     */
+    /** Публичные данные пользователя. */
     private UserVO user;
 
-    /**
-     * 
-     */
+    /** Данные задачи. */
     private QuestionVO questionVO;
 
     /**
@@ -81,12 +59,7 @@ public class QuestionSubmitVO implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * 
-     *
-     * @param questionSubmitVO
-     * @return
-     */
+    /** Преобразует `QuestionSubmitVO` в сущность `QuestionSubmit`. */
     public static QuestionSubmit voToObj(QuestionSubmitVO questionSubmitVO) {
         if (questionSubmitVO == null) {
             return null;
@@ -100,12 +73,7 @@ public class QuestionSubmitVO implements Serializable {
         return question;
     }
 
-    /**
-     * 
-     *
-     * @param questionSubmit
-     * @return
-     */
+    /** Преобразует сущность `QuestionSubmit` в `QuestionSubmitVO`. */
     public static QuestionSubmitVO objToVo(QuestionSubmit questionSubmit) {
         if (questionSubmit == null) {
             return null;

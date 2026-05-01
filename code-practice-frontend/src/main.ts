@@ -12,10 +12,6 @@ import "highlight.js/lib/common";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 import enUS from "@arco-design/web-vue/es/locale/lang/en-us";
 
-/**
- * Локаль интерфейса Arco. Важно: опция locale в app.use(ArcoVue, …) НЕ переключает i18n —
- * without addI18nMessages + useLocale Arco stays on default Chinese locale for some widgets.
- */
 const ruLikeLocale: any = {
   ...enUS,
   locale: "ru-RU",
@@ -48,8 +44,7 @@ const ruLikeLocale: any = {
 addI18nMessages({ "ru-RU": ruLikeLocale });
 useLocale("ru-RU");
 
-// Ignore noisy browser ResizeObserver warning in dev overlay.
-// It does not affect application logic and often appears with complex layouts.
+// Подавление шумного предупреждения ResizeObserver в оверлее dev.
 if (typeof window !== "undefined") {
   window.addEventListener("error", (event) => {
     const message = event?.message || "";

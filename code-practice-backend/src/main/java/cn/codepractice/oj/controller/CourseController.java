@@ -133,7 +133,7 @@ public class CourseController {
 
     /**
      * Публичный список опубликованных курсов для студентов.
-     * keyword — подстрока в названии или описании; sortField — title | createTime | updateTime.
+     * `keyword` — подстрока в названии или описании; `sortField` — `title` | `createTime` | `updateTime`.
      */
     @GetMapping("/list/public")
     public BaseResponse<Page<Course>> listPublicCourseByPage(@RequestParam long current,

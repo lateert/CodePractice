@@ -31,8 +31,8 @@ public class JavaDockerCodeSandbox extends CodeSandboxTemplate {
 
         String userCodeParentPath = userCodeFile.getParentFile().getAbsolutePath();
 
-        // Docker only: используем TCP endpoint, совместимый с Windows Docker Desktop.
-        // Приоритет: DOCKER_HOST -> tcp://localhost:2375
+        // Только Docker: TCP endpoint, удобный для Docker Desktop на Windows.
+        // Приоритет: переменная DOCKER_HOST, иначе tcp://localhost:2375
         String dockerHost = System.getenv("DOCKER_HOST");
         if (dockerHost == null || dockerHost.trim().isEmpty()) {
             dockerHost = "tcp://localhost:2375";

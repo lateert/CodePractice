@@ -4,9 +4,9 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * Standard API response wrapper (code, data, message).
+ * Унифицированное тело ответа API: код, данные, сообщение.
  *
- * @param <T> type of {@code data}
+ * @param <T> тип поля data
  */
 @Data
 public class BaseResponse<T> implements Serializable {

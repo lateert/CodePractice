@@ -7,29 +7,17 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * @author peiYP
- * @create 2023-12-31 17:56
- **/
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExecuteCodeRequest {
 
-    /**
-     * 
-     */
     private String code;
 
-    /**
-     * 
-     */
     private String language;
 
-    /**
-     * 
-     */
     private List<String> input;
 
     // Явные геттеры/сеттеры, чтобы не зависеть от Lombok при компиляции

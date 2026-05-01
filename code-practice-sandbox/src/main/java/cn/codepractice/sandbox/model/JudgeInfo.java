@@ -5,19 +5,10 @@ import lombok.Data;
 @Data
 public class JudgeInfo {
 
-    /**
-     *  
-     */
     private String message;
 
-    /**
-     * 
-     */
     private Long memory;
 
-    /**
-     * 
-     */
     private Long time;
 
     // Явные геттеры/сеттеры, чтобы не зависеть от Lombok при компиляции

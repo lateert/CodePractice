@@ -8,11 +8,6 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 
- *
- * @author peiYP
- */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class QuestionSolutionQueryRequest extends PageRequest implements Serializable {

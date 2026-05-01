@@ -72,7 +72,7 @@ public class AuthTokenFacade {
                 JwtTokenPayload payload = jwtTokenService.parseRefreshToken(refreshToken);
                 refreshTokenRepository.revoke(payload.getTokenId());
             } catch (Exception ignored) {
-                // invalid/expired token on logout is safe to ignore
+                // при выходе невалидный/истёкший refresh-токен допустимо игнорировать
             }
         }
         clearCookies(response);

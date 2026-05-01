@@ -39,14 +39,14 @@ public class AuthInterceptor {
     public Object doInterceptor(ProceedingJoinPoint joinPoint, AuthCheck authCheck) throws Throwable {
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-        // 
+        // Текущий авторизованный пользователь
         User loginUser = userService.getLoginUser(request);
         String userRole = loginUser.getUserRole();
-        // ，
+        // Заблокированным пользователям доступ запрещён
         if (UserRoleEnum.BAN.getValue().equals(userRole)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
-        // mustRoleAny: разрешить, если роль пользователя в списке
+        // mustRoleAny: разрешить, если роль пользователя присутствует в списке
         String[] roleAny = authCheck.mustRoleAny();
         if (roleAny != null && roleAny.length > 0) {
             boolean allowed = false;

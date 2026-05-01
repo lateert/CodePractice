@@ -4,14 +4,14 @@ spring:
     allow-circular-references: true
   application:
     name: code-practice-backend
-  # MVC path matching
+  # Сопоставление путей MVC
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  # Spring Session (Redis)
+  # Spring Session в Redis
   session:
     store-type: redis
-    # Session TTL (30 days)
+    # TTL сессии (30 суток)
     timeout: 2592000
     redis:
       namespace: code-practice:spring:session
@@ -20,7 +20,7 @@ spring:
     url: ${DB_URL:jdbc:mysql://localhost:3306/code_practice}
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:}
-  # Local Redis
+  # Redis для локальной разработки
   redis:
     database: 1
     host: ${REDIS_HOST:127.0.0.1}
@@ -30,14 +30,14 @@ spring:
 
   servlet:
     multipart:
-      # Max file size
+      # Максимальный размер файла
       max-file-size: 10MB
 server:
   address: 0.0.0.0
   port: 8121
   servlet:
     context-path: /api
-    # Session cookie max-age
+    # max-age cookie сессии
     session:
       cookie:
         max-age: 2592000
@@ -57,6 +57,6 @@ app:
   s3:
     enabled: false
 
-# Remote sandbox
+# Удалённая песочница
 codesandbox:
   type : remote

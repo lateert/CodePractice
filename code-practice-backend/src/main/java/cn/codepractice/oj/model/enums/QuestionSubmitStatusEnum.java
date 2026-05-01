@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/** Judge pipeline status for a {@code question_submit} row. */
+/** Статус проверки отправки в таблице {@code question_submit}. */
 public enum QuestionSubmitStatusEnum {
 
     WAITING("Ожидание", 0),
@@ -25,12 +25,12 @@ public enum QuestionSubmitStatusEnum {
         this.value = value;
     }
 
-    /** All numeric status codes. */
+    /** Все числовые коды статусов. */
     public static List<Integer> getValues() {
         return Arrays.stream(values()).map(item -> item.value).collect(Collectors.toList());
     }
 
-    /** Resolve by status code. */
+    /** Поиск enum по числовому коду статуса. */
     public static QuestionSubmitStatusEnum getEnumByValue(Integer value) {
         if (ObjectUtils.isEmpty(value)) {
             return null;

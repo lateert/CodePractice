@@ -11,58 +11,36 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-/**
- * 
- *
- * @author peiYP
- */
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class QuestionQueryRequest extends PageRequest implements Serializable {
 
-    /**
-     * id
-     */
+    /** Идентификатор задачи. */
     private Long id;
 
-    /**
-     * 
-     */
+    /** Подстрока в заголовке. */
     private String title;
 
-    /**
-     * 
-     */
+    /** Подстрока в условии задачи. */
     private String content;
 
-    /**
-     * （json ）
-     */
+    /** Фильтр по тегам. */
     private List<String> tags;
 
-    /**
-     * 
-     */
+    /** Подстрока в ответе/пояснении. */
     private String answer;
 
-    /**
-     *  id
-     */
+    /** Идентификатор автора задачи. */
     private Long userId;
 
-    /**
-     * Фильтр по курсу: только задачи, привязанные к этому courseId (игнорируется, если onlyWithoutCourse = true).
-     */
+    /** Фильтр по курсу: только задачи, привязанные к `courseId`. */
     private Long courseId;
 
-    /**
-     * Только задачи без привязки ни к одному курсу.
-     */
+    /** Только задачи без привязки к курсам. */
     private Boolean onlyWithoutCourse;
 
-    /**
-     * Подстрока в JSON-тегах (частичное совпадение).
-     */
+    /** Подстрока для поиска в тегах. */
     private String tagKeyword;
 
     private static final long serialVersionUID = 1L;

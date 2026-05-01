@@ -11,7 +11,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-/** Загрузка файлов в объектное хранилище (по умолчанию — Amazon S3 через AWS SDK). */
+/** Загрузка файлов в объектное хранилище (по умолчанию — S3 через AWS SDK). */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -59,7 +59,7 @@ public class S3StorageService {
         if (!ep.isEmpty()) {
             return ep + "/" + props.getBucket() + "/" + key;
         }
-        // Amazon S3: виртуальный хостинг по региону
+        // Для S3: URL в формате виртуального хоста с регионом
         return "https://" + props.getBucket() + ".s3." + props.getRegion() + ".amazonaws.com/" + key;
     }
 }

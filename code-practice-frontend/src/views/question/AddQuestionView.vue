@@ -159,7 +159,7 @@ const commitPendingTag = () => {
   tagInputDraft.value = "";
 };
 
-/** Load existing question when editing (query id). */
+/** Загрузка задачи при редактировании (query-параметр id). */
 const loadData = async () => {
   const id = route.query.id;
   if (!id) {
@@ -183,7 +183,7 @@ onMounted(() => {
 });
 
 const handleSubmit = async () => {
-  // create vs update by route
+  // создание или обновление по маршруту
   if (updatePage) {
     const res = await QuestionControllerService.updateQuestion(form);
     console.log(res);
@@ -203,14 +203,14 @@ const handleSubmit = async () => {
   }
 };
 
-/** Append a judge test case row. */
+/** Добавить строку тест-кейса проверки. */
 const handleAdd = () => {
   form.judgeCase.push({
     output: "",
     input: "",
   });
 };
-/** Remove judge test case at index. */
+/** Удалить тест-кейс проверки по индексу. */
 const handleDelete = (index: number) => {
   form.judgeCase.splice(index, 1);
 };

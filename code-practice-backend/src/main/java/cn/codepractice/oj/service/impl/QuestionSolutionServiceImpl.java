@@ -30,11 +30,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
-* @author 86188
-* @description 【question_solution()】Service
-* @createDate 2024-01-08 15:59:12
-*/
 @Service
 public class QuestionSolutionServiceImpl extends ServiceImpl<QuestionSolutionMapper, QuestionSolution>
     implements QuestionSolutionService {
@@ -106,7 +101,6 @@ public class QuestionSolutionServiceImpl extends ServiceImpl<QuestionSolutionMap
         // ,
         questionSolutionList = questionSolutionList.stream()
                 .peek(questionSolution -> {
-//                    questionSolution.setQuestionVO(solutionQuestionMap.getOrDefault(questionSolution.getQuestionId(), null));
                     questionSolution.setUserVO(solutionUserMap.getOrDefault(questionSolution.getUserId(), null));
                 })
                 .collect(Collectors.toList());

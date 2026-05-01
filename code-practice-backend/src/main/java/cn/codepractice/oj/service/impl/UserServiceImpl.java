@@ -35,10 +35,6 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    /**
-     * Legacy-соль для обратной совместимости с ранее сохраненными MD5-хэшами.
-     * Используется только для одноразовой миграции на BCrypt при первом входе.
-     */
     private static final String LEGACY_PASSWORD_SALT = "codePractice";
 
     @Resource
@@ -103,10 +99,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return this.getLoginUserVO(user);
     }
 
-    /**
-     * Поддержка поэтапной миграции: сначала BCrypt, затем legacy MD5+salt.
-     * Если legacy-хэш совпал, сразу обновляем пароль пользователя на BCrypt.
-     */
     private boolean matchesPasswordOrLegacyAndUpgrade(User user, String rawPassword) {
         String storedPassword = user.getUserPassword();
         if (StringUtils.isBlank(storedPassword)) {
@@ -235,7 +227,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return queryWrapper;
     }
 
-    /** Maps API camelCase sortField to MySQL column name for ORDER BY. */
+    /** Преобразует `sortField` из API (camelCase) в имя колонки MySQL для `ORDER BY`. */
     private static String toUserOrderColumn(String sortField) {
         if (!SqlUtils.validSortField(sortField)) {
             return null;

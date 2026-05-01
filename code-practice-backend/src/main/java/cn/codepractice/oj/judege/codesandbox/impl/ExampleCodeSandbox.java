@@ -8,11 +8,7 @@ import cn.codepractice.oj.judege.codesandbox.model.JudgeInfo;
 import cn.codepractice.oj.model.enums.JudgeInfoMessageEnum;
 import cn.codepractice.oj.model.enums.QuestionSubmitStatusEnum;
 
-/**、
- * 
- * @author peiYP
- * @create 2023-12-31 18:08
- **/
+
 public class ExampleCodeSandbox implements CodeSandbox {
     @Override
     public ExecuteCodeResponse doExecute(ExecuteCodeRequest executeCodeRequest) {

@@ -53,13 +53,10 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
             }
         }
 
-        // 
-        // String message = judgeInfo.getMessage();
         String judgeConfigStr = question.getJudgeConfig();
         JudgeConfig judgeConfig = JSONUtil.toBean(judgeConfigStr, JudgeConfig.class);
         Long needMemoryLimit = judgeConfig.getMemoryLimit();
         Long needTimeLimit = judgeConfig.getTimeLimit();
-        // 
         if (memory > needMemoryLimit * 1024 * 1024) {
             messageEnum = JudgeInfoMessageEnum.MEMORY_LIMIT_EXCEEDED;
             judgeInfoResponse.setMessage(messageEnum.getValue());
@@ -79,7 +76,7 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
         return judgeInfoResponse;
     }
 
-    /** Нормализация вывода: \r\n и \r -> \n, trim. */
+    /** Нормализация вывода: `\r\n` и `\r` в `\n`, затем обрезка краевых пробелов. */
     private static String normalizeOutput(String s) {
         if (s == null) return "";
         return s.replace("\r\n", "\n").replace("\r", "\n").trim();

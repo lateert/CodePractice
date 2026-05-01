@@ -19,9 +19,7 @@ import math from "@bytemd/plugin-math";
 import mediumZoom from "@bytemd/plugin-medium-zoom";
 import mermaid from "@bytemd/plugin-mermaid";
 
-/**
- * Типы свойств компонента
- */
+/** Пропсы обёртки над ByteMD Editor. */
 interface Props {
   value: string;
   mode?: string;

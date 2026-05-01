@@ -62,7 +62,6 @@ onMounted(() => {
   if (!codeEditorRef.value) {
     return;
   }
-  // Hover on each property to see its docs!
   codeEditor.value = monaco.editor.create(codeEditorRef.value, {
     value: props.value,
     language: props.language,
@@ -73,9 +72,6 @@ onMounted(() => {
     },
     readOnly: false,
     theme: "vs-dark",
-    // lineNumbers: "off",
-    // roundedSelection: false,
-    // scrollBeyondLastLine: false,
   });
 
   // Обработка изменения содержимого

@@ -37,10 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 
- *
- */
+/** API пользователей: аутентификация, админские операции и обновление своего профиля. */
 @RestController
 @RequestMapping({"/user", "/v1/user"})
 @Slf4j
@@ -55,14 +52,6 @@ public class UserController {
     @Resource
     private PasswordEncoder passwordEncoder;
 
-    // region 
-
-    /**
-     * 
-     *
-     * @param userRegisterRequest
-     * @return
-     */
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
@@ -78,13 +67,6 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
-    /**
-     * 
-     *
-     * @param userLoginRequest
-     * @param request
-     * @return
-     */
     @PostMapping("/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest,
                                                HttpServletRequest request,
@@ -106,12 +88,6 @@ public class UserController {
         return ResultUtils.success(loginUserVO);
     }
 
-    /**
-     * 
-     *
-     * @param request
-     * @return
-     */
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request, HttpServletResponse response) {
         if (request == null) {
@@ -134,29 +110,12 @@ public class UserController {
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
-    /**
-     * 
-     *
-     * @param request
-     * @return
-     */
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
-    // endregion
-
-    // region 
-
-    /**
-     * 
-     *
-     * @param userAddRequest
-     * @param request
-     * @return
-     */
     private static final String DEFAULT_PASSWORD = "12345678";
 
     @PostMapping("/add")
@@ -176,13 +135,6 @@ public class UserController {
         return ResultUtils.success(user.getId());
     }
 
-    /**
-     * 
-     *
-     * @param deleteRequest
-     * @param request
-     * @return
-     */
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
@@ -193,13 +145,6 @@ public class UserController {
         return ResultUtils.success(b);
     }
 
-    /**
-     * 
-     *
-     * @param userUpdateRequest
-     * @param request
-     * @return
-     */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
@@ -214,13 +159,7 @@ public class UserController {
         return ResultUtils.success(true);
     }
 
-    /**
-     *  id （）
-     *
-     * @param id
-     * @param request
-     * @return
-     */
+    /** Сущность пользователя по id (только админ). */
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(long id, HttpServletRequest request) {
@@ -232,13 +171,7 @@ public class UserController {
         return ResultUtils.success(user);
     }
 
-    /**
-     *  id 
-     *
-     * @param id
-     * @param request
-     * @return
-     */
+    /** DTO пользователя по id. */
     @GetMapping("/get/vo")
     public BaseResponse<UserVO> getUserVOById(long id, HttpServletRequest request) {
         BaseResponse<User> response = getUserById(id, request);
@@ -246,13 +179,7 @@ public class UserController {
         return ResultUtils.success(userService.getUserVO(user));
     }
 
-    /**
-     * （）
-     *
-     * @param userQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список сущностей (админ). */
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
@@ -264,13 +191,7 @@ public class UserController {
         return ResultUtils.success(userPage);
     }
 
-    /**
-     * 
-     *
-     * @param userQueryRequest
-     * @param request
-     * @return
-     */
+    /** Постраничный список DTO; ограничение размера страницы. */
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<UserVO>> listUserVOByPage(@RequestBody UserQueryRequest userQueryRequest,
             HttpServletRequest request) {
@@ -279,7 +200,7 @@ public class UserController {
         }
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
-        // 
+        // защита от слишком крупных выборок в публичном списке VO
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
         Page<User> userPage = userService.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
@@ -289,15 +210,7 @@ public class UserController {
         return ResultUtils.success(userVOPage);
     }
 
-    // endregion
-
-    /**
-     * 
-     *
-     * @param userUpdateMyRequest
-     * @param request
-     * @return
-     */
+    /** Обновление полей текущего пользователя по сессии. */
     @PostMapping("/update/my")
     public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
             HttpServletRequest request) {

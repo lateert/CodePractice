@@ -9,9 +9,7 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Комментарий к отправке решения (code review)
- */
+/** Комментарий ревью к отправке решения. */
 @Data
 @TableName(value = "review_comment")
 public class ReviewComment implements Serializable {
@@ -19,14 +17,10 @@ public class ReviewComment implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
-    /**
-     * Идентификатор отправки (question_submit.id)
-     */
+    /** Идентификатор отправки (`question_submit.id`). */
     private Long submissionId;
 
-    /**
-     * Рецензент (user.id)
-     */
+    /** Идентификатор рецензента (`user.id`). */
     private Long reviewerId;
 
     /**
@@ -39,9 +33,7 @@ public class ReviewComment implements Serializable {
      */
     private String commentText;
 
-    /**
-     * Статус: OPEN / RESOLVED
-     */
+    /** Статус комментария: `OPEN` / `RESOLVED`. */
     private String status;
 
     private Date createTime;

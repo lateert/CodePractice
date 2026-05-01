@@ -2,18 +2,10 @@ package cn.codepractice.oj.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * SQL 
- *
- */
+/** Утилиты для безопасной работы с параметрами сортировки в SQL. */
 public class SqlUtils {
 
-    /**
-     * （ SQL ）
-     *
-     * @param sortField
-     * @return
-     */
+    /** Разрешённое имя поля сортировки: без операторов и скобок. */
     public static boolean validSortField(String sortField) {
         if (StringUtils.isBlank(sortField)) {
             return false;

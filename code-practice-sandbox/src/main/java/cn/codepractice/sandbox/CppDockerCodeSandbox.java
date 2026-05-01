@@ -6,10 +6,7 @@ import cn.codepractice.sandbox.model.ExecuteMessage;
 import java.io.File;
 import java.util.List;
 
-/**
- * @author peiYP
- * @create 2024-01-13 21:48
- **/
+/** Песочница C++ на базе общего шаблона (Docker). */
 public class CppDockerCodeSandbox extends CodeSandboxTemplate {
 
     @Override

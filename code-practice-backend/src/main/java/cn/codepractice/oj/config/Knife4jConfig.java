@@ -6,9 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-/**
- * OpenAPI 3 / Knife4j documentation config.
- */
+/** Конфигурация OpenAPI 3 и интерфейса Knife4j (только для профилей `dev`/`test`/`local`). */
 @Configuration
 @Profile({"dev", "test", "local"})
 public class Knife4jConfig {

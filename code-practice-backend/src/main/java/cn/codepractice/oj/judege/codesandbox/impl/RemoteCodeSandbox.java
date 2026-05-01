@@ -9,11 +9,7 @@ import cn.codepractice.oj.judege.codesandbox.CodeSandbox;
 import cn.codepractice.oj.judege.codesandbox.model.ExecuteCodeRequest;
 import cn.codepractice.oj.judege.codesandbox.model.ExecuteCodeResponse;
 
-/**
- * 
- * @author peiYP
- * @create 2023-12-31 18:08
- **/
+
 public class RemoteCodeSandbox implements CodeSandbox {
 
     // 

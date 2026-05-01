@@ -5,10 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
-/**
- * Spring 
- *
- */
+/** Доступ к Spring {@link ApplicationContext} из статических методов. */
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
 
@@ -19,35 +16,17 @@ public class SpringContextUtils implements ApplicationContextAware {
         SpringContextUtils.applicationContext = applicationContext;
     }
 
-    /**
-     *  Bean
-     *
-     * @param beanName
-     * @return
-     */
+    /** Бин по имени в контексте. */
     public static Object getBean(String beanName) {
         return applicationContext.getBean(beanName);
     }
 
-    /**
-     *  class  Bean
-     *
-     * @param beanClass
-     * @param <T>
-     * @return
-     */
+    /** Бин по классу. */
     public static <T> T getBean(Class<T> beanClass) {
         return applicationContext.getBean(beanClass);
     }
 
-    /**
-     *  Bean
-     *
-     * @param beanName
-     * @param beanClass
-     * @param <T>
-     * @return
-     */
+    /** Бин по имени и ожидаемому типу. */
     public static <T> T getBean(String beanName, Class<T> beanClass) {
         return applicationContext.getBean(beanName, beanClass);
     }

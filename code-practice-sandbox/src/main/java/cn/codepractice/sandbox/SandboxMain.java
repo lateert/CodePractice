@@ -4,9 +4,7 @@ package cn.codepractice.sandbox;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * @author peiYP
- */
+/** Точка входа сервиса песочницы (Spring Boot). */
 @SpringBootApplication
 public class SandboxMain {
     public static void main(String[] args) {

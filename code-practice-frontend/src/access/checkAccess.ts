@@ -1,12 +1,9 @@
 import accessEnum from "@/access/accessEnum";
 
 /**
- * Проверка прав доступа
- * @param loginUser
- * @param access
+ * Соответствует ли роль пользователя требуемому уровню доступа маршрута.
  */
 const checkAccess = (loginUser: any, access: any) => {
-  // resolve route access from loginUser.role
   const loginUserAccess = loginUser?.userRole ?? accessEnum.NOT_LOGIN;
 
   if (access === accessEnum.NOT_LOGIN) {

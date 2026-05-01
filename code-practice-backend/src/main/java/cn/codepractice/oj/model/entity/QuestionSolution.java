@@ -8,62 +8,39 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * 
- * @author 86188
- * @TableName question_solution
- */
 @TableName(value ="question_solution")
 @Data
 public class QuestionSolution implements Serializable {
-    /**
-     * 
-     */
+    /** Идентификатор разбора. */
     @TableId(type = IdType.ASSIGN_ID, value = "solution_id")
     private Long solutionId;
 
-    /**
-     * 
-     */
+    /** Текст разбора решения. */
     private String solution;
 
-    /**
-     * 
-     */
+    /** Заголовок разбора. */
     private String title;
 
-    /**
-     * 
-     */
+    /** Идентификатор задачи. */
     @TableField(value = "question_id")
     private Long questionId;
 
-    /**
-     * 
-     */
+    /** Идентификатор автора разбора. */
     @TableField(value = "user_id")
     private Long userId;
 
-    /**
-     * 
-     */
+    /** Время создания. */
     @TableField(value = "create_time")
     private Date createTime;
 
-    /**
-     * 
-     */
+    /** Данные автора для выдачи в API (не хранится в таблице). */
     @TableField(exist = false)
     private UserVO userVO;
 
-    /**
-     * 
-     */
+    /** Теги разбора (JSON-строка). */
     private String tags;
 
-    /**
-     * 
-     */
+    /** Признак логического удаления. */
     @TableLogic
     @TableField(value = "is_delete")
     private Integer isDelete;
