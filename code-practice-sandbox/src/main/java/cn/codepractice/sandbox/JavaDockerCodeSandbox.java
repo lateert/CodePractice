@@ -199,7 +199,8 @@ public class JavaDockerCodeSandbox extends CodeSandboxTemplate {
             String stderr = errorMessage[0];
 
             if (stdout != null) {
-                executeMessage.setMessage(stdout.replaceAll("\r\n", "\n").replaceAll("\r", "").replaceAll("\n", ""));
+                // Нормализуем переносы строк, но не склеиваем вывод в одну строку.
+                executeMessage.setMessage(stdout.replace("\r\n", "\n").replace("\r", ""));
             } else {
                 executeMessage.setMessage("");
             }
