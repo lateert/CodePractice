@@ -341,6 +341,11 @@ public class QuestionController {
                                                    HttpServletRequest request) {
         long size = questionQueryRequest.getPageSize();
         ThrowUtils.throwIf(size > 100 || size < 1, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        if (userService.isTeacher(loginUser) && !userService.isAdmin(loginUser)) {
+            // В экранах управления преподаватель работает только со своими задачами.
+            questionQueryRequest.setUserId(loginUser.getId());
+        }
         Page<Question> questionPage = questionSpecificationQueryService
                 .queryPageBySpecification(questionQueryRequest, null);
         List<Question> records = questionPage.getRecords();

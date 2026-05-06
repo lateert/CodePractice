@@ -197,6 +197,9 @@
               ({{ record.acceptedNum ?? 0 }}/{{ record.submitNum ?? 0 }})</span
             >
           </template>
+          <template #author="{ record }">
+            {{ record.user?.userName || "—" }}
+          </template>
           <template #createTime="{ record }">
             {{
               record.createTime
@@ -205,13 +208,73 @@
             }}
           </template>
           <template #optional="{ record }">
-            <a-button type="primary" @click="doQuestionPage(record)"
-              >Решить</a-button
+            <template
+              v-if="
+                isTeacherNotAdmin &&
+                !isOwnQuestionRow(record) &&
+                courseListForRow(record).length > 0 &&
+                !isEnrolledForQuestion(record)
+              "
             >
+              <a-space direction="vertical" :size="4" style="align-items: flex-start">
+                <a-button type="primary" @click="openEnrollModal(record)">
+                  Записаться на курс
+                </a-button>
+                <span class="enroll-hint">Нужна запись, чтобы решать чужую задачу</span>
+              </a-space>
+            </template>
+            <a-tooltip
+              v-else-if="
+                isTeacherNotAdmin &&
+                !isOwnQuestionRow(record) &&
+                courseListForRow(record).length === 0
+              "
+              content="Задача не привязана к курсу — отправка решения недоступна"
+            >
+              <a-button type="primary" disabled>Решить</a-button>
+            </a-tooltip>
+            <a-button v-else type="primary" @click="doQuestionPage(record)">
+              Решить
+            </a-button>
           </template>
         </a-table>
       </a-space>
     </template>
+
+    <a-modal
+      v-model:visible="enrollModalVisible"
+      title="Запись на курс"
+      :footer="false"
+      unmount-on-close
+      @cancel="closeEnrollModal"
+    >
+      <template v-if="enrollModalRecord">
+        <p class="enroll-modal-intro">
+          Чтобы решать задачу «{{ enrollModalRecord.title }}», выберите курс и запишитесь:
+        </p>
+        <a-space direction="vertical" fill :size="10" style="width: 100%">
+          <div
+            v-for="c in courseListForRow(enrollModalRecord)"
+            :key="c.id"
+            class="enroll-modal-row"
+          >
+            <span class="enroll-modal-title">{{ c.title }}</span>
+            <a-tag v-if="teacherEnrolledCourseIds.has(c.id)" color="green" size="small">
+              Уже записаны
+            </a-tag>
+            <a-button
+              v-else
+              type="primary"
+              size="small"
+              :loading="enrollLoadingId === c.id"
+              @click="enrollToCourse(c.id)"
+            >
+              Записаться
+            </a-button>
+          </div>
+        </a-space>
+      </template>
+    </a-modal>
   </div>
 </template>
 
@@ -308,6 +371,80 @@ const appliedStudentCourse = ref(defaultStudentCourseFilter());
 const isStudent = computed(
   () => userStore.loginUser?.userRole === accessEnum.USER
 );
+
+const isTeacherNotAdmin = computed(
+  () => userStore.loginUser?.userRole === accessEnum.TEACHER
+);
+
+const teacherEnrolledCourseIds = ref<Set<string>>(new Set());
+const enrollModalVisible = ref(false);
+const enrollModalRecord = ref<QuestionRow | null>(null);
+const enrollLoadingId = ref<string | null>(null);
+
+const isOwnQuestionRow = (record: QuestionRow) => {
+  const uid = userStore.loginUser?.id;
+  if (uid == null) return false;
+  const qOwner = record.userId ?? record.user?.id;
+  if (qOwner == null) return false;
+  return String(uid) === String(qOwner);
+};
+
+const isEnrolledForQuestion = (record: QuestionRow) => {
+  const courses = courseListForRow(record);
+  return courses.some((c) => teacherEnrolledCourseIds.value.has(c.id));
+};
+
+const loadTeacherEnrollments = async () => {
+  if (isStudent.value) {
+    teacherEnrolledCourseIds.value = new Set();
+    return;
+  }
+  if (userStore.loginUser?.userRole !== accessEnum.TEACHER) {
+    teacherEnrolledCourseIds.value = new Set();
+    return;
+  }
+  const res = await api("/api/course/enroll/my");
+  if (res.code === 0 && Array.isArray(res.data)) {
+    teacherEnrolledCourseIds.value = new Set(
+      (res.data as { id: string | number }[]).map((c) => String(c.id))
+    );
+  }
+};
+
+const openEnrollModal = (record: QuestionRow) => {
+  enrollModalRecord.value = record;
+  enrollModalVisible.value = true;
+};
+
+const closeEnrollModal = () => {
+  enrollModalVisible.value = false;
+  enrollModalRecord.value = null;
+};
+
+const enrollToCourse = async (courseId: string) => {
+  enrollLoadingId.value = courseId;
+  try {
+    const res = await api("/api/course/enroll", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ courseId }),
+    });
+    if (res.code === 0) {
+      Message.success("Вы записались на курс");
+      await loadTeacherEnrollments();
+      if (
+        enrollModalRecord.value &&
+        isEnrolledForQuestion(enrollModalRecord.value)
+      ) {
+        closeEnrollModal();
+      }
+    } else {
+      Message.error(res.message ?? "Не удалось записаться");
+    }
+  } finally {
+    enrollLoadingId.value = null;
+  }
+};
 
 const api = async (
   url: string,
@@ -442,13 +579,14 @@ const teacherColumns = [
   },
   { title: "Теги", slotName: "tags", width: 200 },
   { title: "Курсы", slotName: "courses", width: 200 },
+  { title: "Автор", slotName: "author", width: 130 },
   { title: "Прошло", slotName: "acceptedRate", width: 130 },
   { title: "Создано", slotName: "createTime", width: 110 },
   {
     title: "Действия",
     slotName: "optional",
     fixed: "right" as const,
-    width: 120,
+    width: 220,
   },
 ];
 
@@ -538,6 +676,10 @@ onMounted(async () => {
   if (isStudent.value) {
     await loadMyCourses();
   } else {
+    if (!userStore.loginUser?.id) {
+      await userStore.getLoginUser();
+    }
+    await loadTeacherEnrollments();
     await loadCourseDropdown();
     await loadData();
   }
@@ -586,5 +728,36 @@ onMounted(async () => {
 .accepted-fraction {
   font-size: 13px;
   color: var(--color-text-2);
+}
+
+.enroll-hint {
+  font-size: 12px;
+  color: var(--color-text-3);
+  max-width: 200px;
+  line-height: 1.35;
+}
+
+.enroll-modal-intro {
+  margin: 0 0 12px;
+  color: var(--color-text-2);
+  line-height: 1.5;
+}
+
+.enroll-modal-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border-2);
+}
+
+.enroll-modal-row:last-child {
+  border-bottom: none;
+}
+
+.enroll-modal-title {
+  flex: 1 1 160px;
+  min-width: 0;
 }
 </style>

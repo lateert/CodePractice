@@ -72,6 +72,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: CourseCatalogView,
     meta: {
       access: accessEnum.USER,
+      /** Каталог и запись — в основном для студентов; преподаватель записывается с главной (чужие задачи). */
       studentMenuOnly: true,
     },
   },

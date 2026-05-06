@@ -50,7 +50,21 @@
           </a-typography-paragraph>
         </template>
         <template #actions="{ record }">
+          <template v-if="isMyCourse(record)">
+            <a-space :size="8" wrap>
+              <span class="own-course-label">Ваш курс</span>
+              <a-button
+                v-if="canManageCourses"
+                type="outline"
+                size="small"
+                @click="goManageCourses"
+              >
+                Управление
+              </a-button>
+            </a-space>
+          </template>
           <a-button
+            v-else
             size="small"
             :status="isEnrolled(record.id) ? 'warning' : 'success'"
             @click="toggleEnrollment(record)"
@@ -64,13 +78,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { Message } from "@arco-design/web-vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import accessEnum from "@/access/accessEnum";
 
 interface Course {
   id: string | number;
   title: string;
   description?: string;
+  authorId?: string | number;
 }
 
 function defaultFilterForm() {
@@ -81,9 +99,27 @@ function defaultFilterForm() {
   };
 }
 
+const router = useRouter();
+const userStore = useUserStore();
+
 const courseList = ref<Course[]>([]);
 const enrolledCourseIds = ref<Set<string>>(new Set());
 const total = ref(0);
+
+const canManageCourses = computed(() => {
+  const r = userStore.loginUser?.userRole;
+  return r === accessEnum.ADMIN || r === accessEnum.TEACHER;
+});
+
+const isMyCourse = (record: Course) => {
+  const uid = userStore.loginUser?.id;
+  if (uid == null || record.authorId == null) return false;
+  return String(uid) === String(record.authorId);
+};
+
+const goManageCourses = () => {
+  router.push("/course/manage");
+};
 
 const filterForm = ref(defaultFilterForm());
 
@@ -160,7 +196,7 @@ const toggleEnrollment = async (course: Course) => {
 const courseColumns = [
   { title: "Курс", dataIndex: "title", width: 280 },
   { title: "Описание", dataIndex: "description", slotName: "description" },
-  { title: "Действия", slotName: "actions", width: 180 },
+  { title: "Действия", slotName: "actions", width: 220 },
 ];
 
 const applyFilters = () => {
@@ -198,6 +234,9 @@ const onPageSizeChange = (size: number) => {
 };
 
 onMounted(async () => {
+  if (!userStore.loginUser?.id) {
+    await userStore.getLoginUser();
+  }
   await loadPublicCourses();
   await loadMyEnrollments();
 });
@@ -205,5 +244,10 @@ onMounted(async () => {
 
 <style scoped>
 #courseCatalogView {
+}
+
+.own-course-label {
+  font-size: 13px;
+  color: var(--color-text-2);
 }
 </style>

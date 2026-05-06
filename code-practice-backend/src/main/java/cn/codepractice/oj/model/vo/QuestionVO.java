@@ -1,7 +1,6 @@
 package cn.codepractice.oj.model.vo;
 
 import cn.hutool.json.JSONUtil;
-import cn.codepractice.oj.model.dto.question.CodeTemplateQuery;
 import cn.codepractice.oj.model.dto.question.JudgeConfig;
 import cn.codepractice.oj.model.entity.Question;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,6 +9,7 @@ import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -45,6 +45,9 @@ public class QuestionVO implements Serializable {
 
     /** Идентификатор автора задачи. */
     private Long userId;
+
+    /** Время создания задачи. */
+    private Date createTime;
 
     /** Данные автора задачи. */
     private UserVO user;

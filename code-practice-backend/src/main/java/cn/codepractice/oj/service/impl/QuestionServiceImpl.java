@@ -4,6 +4,7 @@ import java.util.List;
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.codepractice.oj.common.ErrorCode;
 import cn.codepractice.oj.constant.CommonConstant;
+import cn.codepractice.oj.constant.UserConstant;
 import cn.codepractice.oj.exception.BusinessException;
 import cn.codepractice.oj.exception.ThrowUtils;
 import cn.codepractice.oj.model.dto.question.CodeTemplateQuery;
@@ -11,7 +12,6 @@ import cn.codepractice.oj.model.dto.question.QuestionQueryRequest;
 import cn.codepractice.oj.model.entity.*;
 import cn.codepractice.oj.model.enums.JudgeInfoMessageEnum;
 import cn.codepractice.oj.model.enums.QuestionSubmitLanguageEnum;
-import cn.codepractice.oj.model.enums.QuestionSubmitStatusEnum;
 import cn.codepractice.oj.model.vo.QuestionSubmitVO;
 import cn.codepractice.oj.model.vo.QuestionVO;
 import cn.codepractice.oj.model.vo.UserVO;
@@ -171,8 +171,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         }
         List<QuestionSubmit> submits = questionSubmitService.list(Wrappers.lambdaQuery(QuestionSubmit.class)
                 .in(QuestionSubmit::getQuestionId, ids));
+        Map<Long, String> submitUserRoleMap = buildUserRoleMap(submits.stream()
+                .map(QuestionSubmit::getUserId)
+                .collect(Collectors.toSet()));
+        Map<Long, Long> questionOwnerMap = questions.stream()
+                .filter(q -> q.getId() != null)
+                .collect(Collectors.toMap(Question::getId, Question::getUserId, (a, b) -> a));
         Map<Long, List<QuestionSubmit>> byQuestion = submits.stream()
                 .filter(s -> s.getIsDelete() == null || s.getIsDelete() == 0)
+                .filter(s -> shouldCountInStats(s, submitUserRoleMap, questionOwnerMap))
                 .collect(Collectors.groupingBy(QuestionSubmit::getQuestionId));
         for (Question q : questions) {
             List<QuestionSubmit> list = byQuestion.getOrDefault(q.getId(), Collections.emptyList());
@@ -204,12 +211,19 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         // 2. （）
         List<QuestionSubmit> questionSubmits = questionSubmitService.list(
                 Wrappers.lambdaQuery(QuestionSubmit.class).eq(QuestionSubmit::getQuestionId, question.getId()));
-        long acSubmitCount = questionSubmits.stream().filter(questionSubmit -> {
+        Map<Long, String> submitUserRoleMap = buildUserRoleMap(questionSubmits.stream()
+                .map(QuestionSubmit::getUserId)
+                .collect(Collectors.toSet()));
+        Map<Long, Long> questionOwnerMap = Collections.singletonMap(question.getId(), question.getUserId());
+        List<QuestionSubmit> countedSubmits = questionSubmits.stream()
+                .filter(s -> shouldCountInStats(s, submitUserRoleMap, questionOwnerMap))
+                .collect(Collectors.toList());
+        long acSubmitCount = countedSubmits.stream().filter(questionSubmit -> {
             QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
             return questionSubmitVO.getJudgeInfo() != null
                     && JudgeInfoMessageEnum.ACCEPTED.getValue().equals(questionSubmitVO.getJudgeInfo().getMessage());
         }).count();
-        questionVO.setSubmitNum(questionSubmits.size());
+        questionVO.setSubmitNum(countedSubmits.size());
         questionVO.setAcceptedNum((int) acSubmitCount);
         return questionVO;
     }
@@ -236,7 +250,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
                 .in(QuestionSubmit::getQuestionId, questionIds));
 
         Map<Long, List<QuestionSubmit>> submitListMap = questionSubmitList.stream()
+                .filter(s -> s.getIsDelete() == null || s.getIsDelete() == 0)
                 .collect(Collectors.groupingBy(QuestionSubmit::getQuestionId));
+        Map<Long, String> submitUserRoleMap = buildUserRoleMap(questionSubmitList.stream()
+                .map(QuestionSubmit::getUserId)
+                .collect(Collectors.toSet()));
+        Map<Long, Long> questionOwnerMap = questionList.stream()
+                .filter(q -> q.getId() != null)
+                .collect(Collectors.toMap(Question::getId, Question::getUserId, (a, b) -> a));
 
 
         // 
@@ -249,7 +270,9 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
                 user = userIdUserListMap.get(userId).get(0);
             }
             questionVO.setUser(userService.getUserVO(user));
-            List<QuestionSubmit> questionSubmits = submitListMap.getOrDefault(questionId, new ArrayList<>());
+            List<QuestionSubmit> questionSubmits = submitListMap.getOrDefault(questionId, new ArrayList<>()).stream()
+                    .filter(s -> shouldCountInStats(s, submitUserRoleMap, questionOwnerMap))
+                    .collect(Collectors.toList());
             long acSubmitCount = questionSubmits.stream().filter(questionSubmit -> {
                 QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
                 return JudgeInfoMessageEnum.ACCEPTED.getValue().equals(questionSubmitVO.getJudgeInfo().getMessage());
@@ -269,6 +292,31 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             return ResourceUtil.readUtf8Str("classpath:/codeTemplate/CodeTemplate.java");
         }
         return ResourceUtil.readUtf8Str("classpath:/codeTemplate/CodeTemplate.java");
+    }
+
+    private Map<Long, String> buildUserRoleMap(Set<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        return userService.listByIds(userIds).stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(User::getId, User::getUserRole, (a, b) -> a));
+    }
+
+    private boolean shouldCountInStats(QuestionSubmit submit,
+                                       Map<Long, String> submitUserRoleMap,
+                                       Map<Long, Long> questionOwnerMap) {
+        String role = submitUserRoleMap.get(submit.getUserId());
+        if (UserConstant.ADMIN_ROLE.equals(role)) {
+            return false;
+        }
+        if (UserConstant.TEACHER_ROLE.equals(role)) {
+            Long ownerId = questionOwnerMap.get(submit.getQuestionId());
+            if (ownerId != null && Objects.equals(ownerId, submit.getUserId())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

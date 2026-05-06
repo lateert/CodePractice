@@ -195,6 +195,7 @@ const listQueryString = () => {
   const params = new URLSearchParams();
   params.set("current", String(current));
   params.set("pageSize", String(pageSize));
+  params.set("mineOnly", "1");
   const t = filterForm.value.title.trim();
   if (t) params.set("title", t);
   if (filterForm.value.status === "published") params.set("isPublished", "1");

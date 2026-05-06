@@ -75,10 +75,19 @@ public class StatisticsController {
         long questionCount = questionService.count();
         QueryWrapper<cn.codepractice.oj.model.entity.QuestionSubmit> qAll = new QueryWrapper<>();
         qAll.eq("is_delete", 0);
-        long submissionCount = questionSubmitService.count(qAll);
+        List<QuestionSubmit> allSubmissions = questionSubmitService.list(qAll);
+        Map<Long, String> userRoleMap = buildUserRoleMap(allSubmissions.stream()
+                .map(QuestionSubmit::getUserId)
+                .collect(Collectors.toSet()));
+        long submissionCount = allSubmissions.stream()
+                .filter(s -> !UserConstant.ADMIN_ROLE.equals(userRoleMap.get(s.getUserId())))
+                .count();
         QueryWrapper<cn.codepractice.oj.model.entity.QuestionSubmit> qAccepted = new QueryWrapper<>();
         qAccepted.eq("is_delete", 0).eq("status", QuestionSubmitStatusEnum.SUCCESS.getValue());
-        long acceptedCount = questionSubmitService.count(qAccepted);
+        List<QuestionSubmit> acceptedSubmissions = questionSubmitService.list(qAccepted);
+        long acceptedCount = acceptedSubmissions.stream()
+                .filter(s -> !UserConstant.ADMIN_ROLE.equals(userRoleMap.get(s.getUserId())))
+                .count();
 
         Map<String, Long> map = new HashMap<>();
         map.put("courseCount", courseCount);
@@ -148,7 +157,14 @@ public class StatisticsController {
                     .in("user_id", userIds)
                     .in("question_id", questionIds);
             List<QuestionSubmit> selectedSubmissions = questionSubmitService.list(qsWrapper);
+            Map<Long, String> userRoleMap = buildUserRoleMap(selectedSubmissions.stream()
+                    .map(QuestionSubmit::getUserId)
+                    .collect(Collectors.toSet()));
             for (QuestionSubmit s : selectedSubmissions) {
+                String submitterRole = userRoleMap.get(s.getUserId());
+                if (UserConstant.ADMIN_ROLE.equals(submitterRole)) {
+                    continue;
+                }
                 if (!userIdSet.contains(s.getUserId()) || !questionIdSet.contains(s.getQuestionId())) {
                     continue;
                 }
@@ -251,5 +267,19 @@ public class StatisticsController {
             return 0D;
         }
         return Math.round((numerator * 10000.0) / denominator) / 100.0;
+    }
+
+    private Map<Long, String> buildUserRoleMap(Set<Long> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return new HashMap<>();
+        }
+        List<User> users = userService.listByIds(userIds);
+        Map<Long, String> result = new HashMap<>();
+        for (User user : users) {
+            if (user != null && user.getId() != null) {
+                result.put(user.getId(), user.getUserRole());
+            }
+        }
+        return result;
     }
 }

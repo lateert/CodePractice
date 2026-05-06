@@ -265,7 +265,7 @@ const loadData = async () => {
 
 const loadCourseDropdown = async () => {
   try {
-    const res = await fetch("/api/course/list/page?current=1&pageSize=100", {
+    const res = await fetch("/api/course/list/page?current=1&pageSize=100&mineOnly=1", {
       credentials: "include",
     });
     const json = await res.json();

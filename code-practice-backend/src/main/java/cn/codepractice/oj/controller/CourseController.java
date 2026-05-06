@@ -101,6 +101,7 @@ public class CourseController {
                                                        @RequestParam long pageSize,
                                                        @RequestParam(required = false) String title,
                                                        @RequestParam(required = false) Integer isPublished,
+                                                       @RequestParam(required = false) Boolean mineOnly,
                                                        HttpServletRequest request) {
         if (current <= 0 || pageSize <= 0 || pageSize > 100) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -115,7 +116,12 @@ public class CourseController {
                 wrapper.eq("is_published", isPublished);
             }
         } else if (userService.isTeacher(loginUser)) {
-            if (isPublished != null && isPublished == 1) {
+            if (Boolean.TRUE.equals(mineOnly)) {
+                wrapper.eq("author_id", loginUser.getId());
+                if (isPublished != null && (isPublished == 0 || isPublished == 1)) {
+                    wrapper.eq("is_published", isPublished);
+                }
+            } else if (isPublished != null && isPublished == 1) {
                 wrapper.eq("is_published", 1);
             } else if (isPublished != null && isPublished == 0) {
                 wrapper.eq("is_published", 0).eq("author_id", loginUser.getId());

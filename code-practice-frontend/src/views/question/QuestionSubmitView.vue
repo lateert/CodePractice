@@ -35,10 +35,6 @@
               style="width: 200px"
               @press-enter="applyFilters"
             />
-            <a-select v-model="filterForm.language" placeholder="Язык" style="width: 140px">
-              <a-option value="all">Все языки</a-option>
-              <a-option value="java">java</a-option>
-            </a-select>
             <a-select v-model="filterForm.status" placeholder="Статус" style="width: 200px">
               <a-option value="all">Все статусы</a-option>
               <a-option :value="0">Ожидание</a-option>
@@ -50,7 +46,6 @@
             <a-select v-model="filterForm.sortField" class="submit-sort-select" @change="onSortOrOrderChange">
               <a-option value="createTime">Сортировка: время</a-option>
               <a-option value="updateTime">Сортировка: обновление</a-option>
-              <a-option value="language">Сортировка: язык</a-option>
               <a-option value="status">Сортировка: статус</a-option>
               <a-option value="questionId">Сортировка: задача (id)</a-option>
               <a-option value="userId">Сортировка: пользователь (id)</a-option>
@@ -70,7 +65,7 @@
         :columns="columns"
         :data="dataList"
         :bordered="{ wrapper: true, cell: true }"
-        :scroll="{ x: 1180 }"
+        :scroll="{ x: 1090 }"
         :pagination="{
           showTotal: true,
           showPageSize: true,
@@ -247,7 +242,6 @@ const filterForm = ref({
   courseId: "all" as string,
   questionTitle: "",
   userName: "",
-  language: "all",
   status: "all" as "all" | number,
   sortField: "createTime",
   sortOrder: "descend",
@@ -288,12 +282,12 @@ const buildApiBody = (): QuestionSubmitQueryRequest => {
     sortField: f.sortField,
     sortOrder: f.sortOrder,
   };
+  // id курса — snowflake: Number() даёт неверное значение в JS, в API передаём строкой
   if (f.courseId !== "all" && f.courseId && /^\d+$/.test(f.courseId)) {
-    body.courseId = Number(f.courseId);
+    (body as { courseId?: string }).courseId = f.courseId;
   }
   if (f.questionTitle.trim()) body.questionTitleKeyword = f.questionTitle.trim();
   if (f.userName.trim()) body.userNameKeyword = f.userName.trim();
-  if (f.language !== "all") body.language = f.language;
   if (f.status !== "all") body.status = f.status as number;
   return body;
 };
@@ -305,7 +299,6 @@ const queryFromState = () => {
   if (f.courseId !== "all") q.courseId = f.courseId;
   if (f.questionTitle.trim()) q.qTitle = f.questionTitle.trim();
   if (f.userName.trim()) q.user = f.userName.trim();
-  if (f.language !== "all") q.lang = f.language;
   if (f.status !== "all") q.st = String(f.status);
   q.sort = f.sortField;
   q.order = f.sortOrder;
@@ -321,7 +314,6 @@ const readStateFromQuery = () => {
   f.courseId = typeof q.courseId === "string" && q.courseId ? q.courseId : "all";
   f.questionTitle = typeof q.qTitle === "string" ? q.qTitle : "";
   f.userName = typeof q.user === "string" ? q.user : "";
-  f.language = typeof q.lang === "string" && ["java"].includes(q.lang) ? q.lang : "all";
   if (q.st === "0" || q.st === "1" || q.st === "2" || q.st === "3" || q.st === "4") {
     f.status = Number(q.st);
   } else {
@@ -329,7 +321,7 @@ const readStateFromQuery = () => {
   }
   f.sortField =
     typeof q.sort === "string" &&
-    ["createTime", "updateTime", "language", "status", "questionId", "userId"].includes(q.sort)
+    ["createTime", "updateTime", "status", "questionId", "userId"].includes(q.sort)
       ? q.sort
       : "createTime";
   f.sortOrder = q.order === "ascend" ? "ascend" : "descend";
@@ -383,7 +375,6 @@ const resetFilters = () => {
     courseId: "all",
     questionTitle: "",
     userName: "",
-    language: "all",
     status: "all",
     sortField: "createTime",
     sortOrder: "descend",
@@ -489,7 +480,6 @@ const toggleStatus = async (item: any) => {
 };
 
 const columns = [
-  { title: "Язык", dataIndex: "language", width: 88 },
   { title: "Статус", slotName: "statusStr", width: 120 },
   { title: "Результат", slotName: "judgeInfo", width: 160 },
   { title: "Курсы", slotName: "courses", width: 220 },

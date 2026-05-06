@@ -2,6 +2,7 @@ package cn.codepractice.oj.service.impl;
 
 import cn.codepractice.oj.common.ErrorCode;
 import cn.codepractice.oj.constant.CommonConstant;
+import cn.codepractice.oj.constant.UserConstant;
 import cn.codepractice.oj.exception.BusinessException;
 import cn.codepractice.oj.judege.JudgeService;
 import cn.codepractice.oj.model.dto.question.QuestionQueryRequest;
@@ -18,6 +19,7 @@ import cn.codepractice.oj.model.vo.QuestionVO;
 import cn.codepractice.oj.model.vo.UserVO;
 import cn.codepractice.oj.service.CourseQuestionService;
 import cn.codepractice.oj.service.CourseService;
+import cn.codepractice.oj.service.EnrollmentService;
 import cn.codepractice.oj.service.QuestionService;
 import cn.codepractice.oj.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -67,6 +69,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private CourseService courseService;
 
     @Resource
+    private EnrollmentService enrollmentService;
+
+    @Resource
     @Lazy
     private JudgeService judgeService;
 
@@ -83,6 +88,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
         }
+        validateSubmitPermission(question, loginUser);
         long userId = loginUser.getId();
         QuestionSubmit questionSubmit = new QuestionSubmit();
         questionSubmit.setLanguage(language);
@@ -102,6 +108,35 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
             judgeService.doJudge(submitId);
         });
         return submitId;
+    }
+
+    private void validateSubmitPermission(Question question, User loginUser) {
+        if (userService.isAdmin(loginUser)) {
+            return;
+        }
+        Long loginUserId = loginUser.getId();
+        Long questionOwnerId = question.getUserId();
+        if (Objects.equals(questionOwnerId, loginUserId)) {
+            return;
+        }
+        List<CourseQuestion> rels = courseQuestionService.list(
+                new LambdaQueryWrapper<CourseQuestion>().eq(CourseQuestion::getQuestionId, question.getId()));
+        Set<Long> courseIds = rels.stream()
+                .map(CourseQuestion::getCourseId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        if (courseIds.isEmpty()) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "Задача недоступна для отправки");
+        }
+        long enrollmentCount = enrollmentService.count(new LambdaQueryWrapper<cn.codepractice.oj.model.entity.Enrollment>()
+                .eq(cn.codepractice.oj.model.entity.Enrollment::getUserId, loginUserId)
+                .in(cn.codepractice.oj.model.entity.Enrollment::getCourseId, courseIds));
+        if (enrollmentCount <= 0) {
+            if (UserConstant.TEACHER_ROLE.equals(loginUser.getUserRole())) {
+                throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "Для решения чужих задач нужна запись на курс");
+            }
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "Сначала запишитесь на курс");
+        }
     }
 
 
