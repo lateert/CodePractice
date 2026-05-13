@@ -11,6 +11,9 @@ public class LoginUserVO implements Serializable {
     /** Идентификатор пользователя. */
     private Long id;
 
+    /** Логин учётной записи/
+    private String userAccount;
+
     /** Имя пользователя. */
     private String userName;
 

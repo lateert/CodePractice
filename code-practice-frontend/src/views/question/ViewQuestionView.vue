@@ -167,9 +167,7 @@ const question = ref<QuestionVO>();
 
 /** Загрузка задачи по id из маршрута. */
 const loadData = async () => {
-  const res = await QuestionControllerService.getQuestionVoById2(
-    props.id as any
-  );
+  const res = await QuestionControllerService.getQuestionVoById2(props.id);
   if (res.code === 0) {
     question.value = res.data;
     getCodeTemplate(form.value.language);

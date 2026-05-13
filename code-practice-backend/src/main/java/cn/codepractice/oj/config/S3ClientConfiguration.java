@@ -13,7 +13,7 @@ import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
 
 /**
- * Клиент AWS SDK v2 для любого S3-совместимого API.
+ * Клиент S3-совместимого API.
  */
 @Slf4j
 @Configuration

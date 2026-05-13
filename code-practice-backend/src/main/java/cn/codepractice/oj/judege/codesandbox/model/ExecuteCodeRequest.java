@@ -14,19 +14,10 @@ import java.util.List;
 @AllArgsConstructor
 public class ExecuteCodeRequest {
 
-    /**
-     * 
-     */
     private String code;
 
-    /**
-     * 
-     */
     private String language;
 
-    /**
-     * 
-     */
     private List<String> input;
 
 }

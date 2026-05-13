@@ -1,9 +1,6 @@
 package cn.codepractice.oj.common;
 
-/**
- * 
- *
- */
+
 public class ResultUtils {
 
     /**

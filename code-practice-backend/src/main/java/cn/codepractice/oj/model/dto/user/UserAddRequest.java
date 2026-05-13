@@ -19,7 +19,7 @@ public class UserAddRequest implements Serializable {
     /** Роль пользователя: user/admin/teacher/ban. */
     private String userRole;
 
-    /** Пароль (если не задан, подставляется значение по умолчанию). */
+    /** Пароль  */
     private String userPassword;
 
     private static final long serialVersionUID = 1L;

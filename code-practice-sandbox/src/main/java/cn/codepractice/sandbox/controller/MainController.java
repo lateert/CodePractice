@@ -9,7 +9,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/** HTTP API песочницы: health и {@code /executeCode}. */
+/** HTTP API песочницы*/
 @RestController
 @RequestMapping("/")
 public class MainController {

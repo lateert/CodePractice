@@ -5,7 +5,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/** Локальное хранилище загрузок (без S3) для разработки. */
+/** Локальное хранилище загрузок (без S3) */
 @Data
 @Component
 @ConfigurationProperties(prefix = "app.file")

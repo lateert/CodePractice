@@ -2,10 +2,6 @@ package cn.codepractice.oj.exception;
 
 import cn.codepractice.oj.common.ErrorCode;
 
-/**
- * 
- *
- */
 public class ThrowUtils {
 
     /**

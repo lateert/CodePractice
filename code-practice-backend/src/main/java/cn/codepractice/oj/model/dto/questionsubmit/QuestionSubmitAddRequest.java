@@ -10,14 +10,8 @@ import java.util.Date;
 @Data
 public class QuestionSubmitAddRequest implements Serializable {
 
-    /**
-     * 
-     */
     private String language;
 
-    /**
-     * 
-     */
     private String code;
 
 

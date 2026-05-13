@@ -11,20 +11,10 @@ import java.util.List;
 @Data
 public class QuestionSubmitQueryRequest extends PageRequest implements Serializable {
 
-    /**
-     * 
-     */
     private String language;
 
-    /**
-     * 
-     */
     private String code;
 
-
-    /**
-     * 
-     */
     private Integer status;
 
 

@@ -12,10 +12,11 @@ import cn.codepractice.oj.model.entity.Enrollment;
 import cn.codepractice.oj.model.entity.Question;
 import cn.codepractice.oj.model.entity.QuestionSubmit;
 import cn.codepractice.oj.model.entity.User;
-import cn.codepractice.oj.model.enums.QuestionSubmitStatusEnum;
+import cn.codepractice.oj.model.enums.JudgeInfoMessageEnum;
 import cn.codepractice.oj.model.vo.CourseSummaryVO;
 import cn.codepractice.oj.model.vo.CourseProgressVO;
 import cn.codepractice.oj.model.vo.QuestionProgressItemVO;
+import cn.codepractice.oj.model.vo.QuestionSubmitVO;
 import cn.codepractice.oj.model.vo.QuestionSummaryVO;
 import cn.codepractice.oj.model.vo.StudentProgressVO;
 import cn.codepractice.oj.service.CourseQuestionService;
@@ -82,11 +83,9 @@ public class StatisticsController {
         long submissionCount = allSubmissions.stream()
                 .filter(s -> !UserConstant.ADMIN_ROLE.equals(userRoleMap.get(s.getUserId())))
                 .count();
-        QueryWrapper<cn.codepractice.oj.model.entity.QuestionSubmit> qAccepted = new QueryWrapper<>();
-        qAccepted.eq("is_delete", 0).eq("status", QuestionSubmitStatusEnum.SUCCESS.getValue());
-        List<QuestionSubmit> acceptedSubmissions = questionSubmitService.list(qAccepted);
-        long acceptedCount = acceptedSubmissions.stream()
+        long acceptedCount = allSubmissions.stream()
                 .filter(s -> !UserConstant.ADMIN_ROLE.equals(userRoleMap.get(s.getUserId())))
+                .filter(StatisticsController::isVerdictAccepted)
                 .count();
 
         Map<String, Long> map = new HashMap<>();
@@ -139,7 +138,7 @@ public class StatisticsController {
             List<User> users = userService.listByIds(userIds);
             for (User u : users) {
                 userAccounts.put(u.getId(), u.getUserAccount());
-                userNames.put(u.getId(), u.getUserName());
+                userNames.put(u.getId(), normalizeProgressDisplayName(u.getUserName()));
             }
         }
 
@@ -175,7 +174,7 @@ public class StatisticsController {
                         questionSubmitTotals.getOrDefault(s.getQuestionId(), 0L) + 1L
                 );
                 questionAttemptedUsers.computeIfAbsent(s.getQuestionId(), k -> new HashSet<>()).add(s.getUserId());
-                if (QuestionSubmitStatusEnum.SUCCESS.getValue().equals(s.getStatus())) {
+                if (isVerdictAccepted(s)) {
                     acceptedCounts.put(key, acceptedCounts.getOrDefault(key, 0L) + 1L);
                     questionAcceptedTotals.put(
                             s.getQuestionId(),
@@ -267,6 +266,23 @@ public class StatisticsController {
             return 0D;
         }
         return Math.round((numerator * 10000.0) / denominator) / 100.0;
+    }
+
+    private static String normalizeProgressDisplayName(String raw) {
+        if (raw == null) {
+            return "";
+        }
+        String t = raw.trim();
+        if (t.isEmpty() || "null".equalsIgnoreCase(t)) {
+            return "";
+        }
+        return t;
+    }
+
+    private static boolean isVerdictAccepted(QuestionSubmit s) {
+        QuestionSubmitVO vo = QuestionSubmitVO.objToVo(s);
+        return vo.getJudgeInfo() != null
+                && JudgeInfoMessageEnum.ACCEPTED.getValue().equals(vo.getJudgeInfo().getMessage());
     }
 
     private Map<Long, String> buildUserRoleMap(Set<Long> userIds) {

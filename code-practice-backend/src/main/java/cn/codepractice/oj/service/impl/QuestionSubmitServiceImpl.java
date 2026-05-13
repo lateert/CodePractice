@@ -283,7 +283,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
                 .map(questionSubmit -> {
                     QuestionSubmitVO questionSubmitVO = getQuestionSubmitVO(questionSubmit, loginUser);
                     User submitUser = userService.getById(questionSubmit.getUserId());
-                    questionSubmitVO.setUserName(submitUser != null ? submitUser.getUserName() : "—");
+                    questionSubmitVO.setUserName(resolveSubmitRowUserLabel(submitUser));
                     QuestionSubmitStatusEnum st = QuestionSubmitStatusEnum.getEnumByValue(questionSubmitVO.getStatus());
                     questionSubmitVO.setStatusStr(st != null ? st.getText() : "—");
                     questionSubmitVO.setQuestionVO(questionVOMap.get(questionSubmitVO.getQuestionId()));
@@ -293,6 +293,21 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         fillCourseTitlesForSubmits(questionSubmitVOList);
         questionSubmitVOPage.setRecords(questionSubmitVOList);
         return questionSubmitVOPage;
+    }
+
+    /**
+     * Подпись пользователя в таблице отправок: имя, иначе логин).
+     */
+    private static String resolveSubmitRowUserLabel(User submitUser) {
+        if (submitUser == null) {
+            return "—";
+        }
+        String name = StringUtils.trimToNull(submitUser.getUserName());
+        if (name != null && !"null".equalsIgnoreCase(name)) {
+            return name;
+        }
+        String account = StringUtils.trimToNull(submitUser.getUserAccount());
+        return account != null ? account : "—";
     }
 
     private void fillCourseTitlesForSubmits(List<QuestionSubmitVO> vos) {

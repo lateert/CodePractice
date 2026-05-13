@@ -2,15 +2,8 @@ package cn.codepractice.oj.exception;
 
 import cn.codepractice.oj.common.ErrorCode;
 
-/**
- * 
- *
- */
 public class BusinessException extends RuntimeException {
 
-    /**
-     * 
-     */
     private final int code;
 
     public BusinessException(int code, String message) {

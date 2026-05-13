@@ -10,27 +10,13 @@ import java.util.List;
 @Data
 public class QuestionSolutionAddRequest implements Serializable {
 
-    /**
-     * 
-     */
     private String title;
 
-    /**
-     * 
-     */
     private String solution;
 
-    /**
-     * id
-     */
     private Long questionId;
 
-    /**
-     * 
-     */
     private List<String> tags;
-
-
 
     private static final long serialVersionUID = 1L;
 }

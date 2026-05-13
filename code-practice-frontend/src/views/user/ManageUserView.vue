@@ -99,10 +99,10 @@
         <a-form-item label="Имя">
           <a-input v-model="addForm.userName" placeholder="Имя" />
         </a-form-item>
-        <a-form-item label="Пароль">
+        <a-form-item label="Пароль" required>
           <a-input-password
             v-model="addForm.userPassword"
-            placeholder="Пароль (по умолчанию 12345678)"
+            placeholder="Не менее 8 символов"
           />
         </a-form-item>
         <a-form-item label="Роль">
@@ -250,14 +250,21 @@ const submitAdd = async () => {
     Message.error("Введите логин");
     return false;
   }
+  const pwd = (addForm.value.userPassword ?? "").trim();
+  if (!pwd) {
+    Message.error("Введите пароль");
+    return false;
+  }
+  if (pwd.length < 8) {
+    Message.error("Пароль должен быть не короче 8 символов");
+    return false;
+  }
   const body: UserAddRequest & { userPassword?: string } = {
     userAccount: addForm.value.userAccount.trim(),
     userName: addForm.value.userName?.trim() || undefined,
     userRole: addForm.value.userRole || "user",
+    userPassword: pwd,
   };
-  if (addForm.value.userPassword?.trim()) {
-    body.userPassword = addForm.value.userPassword.trim();
-  }
   const res = await UserControllerService.addUser(body);
   if (res.code === 0) {
     Message.success("Пользователь добавлен");

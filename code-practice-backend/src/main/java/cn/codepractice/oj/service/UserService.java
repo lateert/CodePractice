@@ -10,10 +10,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import java.util.List;
 import jakarta.servlet.http.HttpServletRequest;
 
-/**
- * 
- *
- */
 public interface UserService extends IService<User> {
 
     /**

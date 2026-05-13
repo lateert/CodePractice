@@ -13,24 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ExecuteCodeResponse {
 
-    /**
-     * 
-     */
     private String message;
 
-    /**
-     * 
-     */
     private List<String> output;
 
-    /**
-     * 
-     */
     private JudgeInfo judgeInfo;
 
-    /**
-     * 
-     */
     private Integer status;
 
 }

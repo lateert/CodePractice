@@ -100,3 +100,9 @@ integration:
       client-id: ${GITHUB_CLIENT_ID:}
       client-secret: ${GITHUB_CLIENT_SECRET:}
       redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/user/oauth/github/callback}
+
+# Knife4j: язык интерфейса документации — только EN (имя enum в конфиге).
+knife4j:
+  enable: true
+  setting:
+    language: EN

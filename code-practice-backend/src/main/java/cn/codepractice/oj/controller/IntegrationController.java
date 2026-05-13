@@ -17,7 +17,7 @@ public class IntegrationController {
     private GithubOAuthService githubOAuthService;
 
     /**
-     * Внешняя REST-интеграция #2: GitHub Search API.
+     * Внешняя REST-интеграция: GitHub Search API.
      */
     @GetMapping("/github/repositories/search")
     public BaseResponse<String> searchGithubRepositories(@RequestParam(required = false) String q,

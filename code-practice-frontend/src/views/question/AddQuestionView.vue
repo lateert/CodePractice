@@ -161,13 +161,12 @@ const commitPendingTag = () => {
 
 /** Загрузка задачи при редактировании (query-параметр id). */
 const loadData = async () => {
-  const id = route.query.id;
-  if (!id) {
+  const raw = route.query.id;
+  if (!raw) {
     return;
   }
-  const res = await QuestionControllerService.getQuestionById2(
-    Number(Array.isArray(id) ? id[0] : id)
-  );
+  const idStr = String(Array.isArray(raw) ? raw[0] : raw);
+  const res = await QuestionControllerService.getQuestionById2(idStr);
   if (res.code === 0) {
     Object.assign(form, res.data);
     form.judgeCase = JSON.parse(res.data.judgeCase);

@@ -351,7 +351,7 @@ requestBody: QuestionAddRequest,
      * @throws ApiError
      */
     public static getQuestionByPath(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseObject> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -368,7 +368,7 @@ id: number,
      * @throws ApiError
      */
     public static getQuestionByPath1(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseObject> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -385,7 +385,7 @@ id: number,
      * @throws ApiError
      */
     public static getQuestionVoById2(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseQuestionVO> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -402,7 +402,7 @@ id: number,
      * @throws ApiError
      */
     public static getQuestionVoById3(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseQuestionVO> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -419,7 +419,7 @@ id: number,
      * @throws ApiError
      */
     public static getQuestionById2(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseObject> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -436,7 +436,7 @@ id: number,
      * @throws ApiError
      */
     public static getQuestionById3(
-id: number,
+id: string | number,
 ): CancelablePromise<BaseResponseObject> {
         return __request(OpenAPI, {
             method: 'GET',

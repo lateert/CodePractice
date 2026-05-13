@@ -13,7 +13,7 @@ public class AppS3Properties {
 
     /**
      * Кастомный endpoint (обязателен для MinIO), например {@code http://127.0.0.1:9000}.
-     * Пусто — стандартный endpoint региона AWS.
+     * Пусто — endpoint по умолчанию для выбранного региона (облачный S3 без custom URL).
      */
     private String endpoint = "";
 
@@ -25,10 +25,6 @@ public class AppS3Properties {
 
     private String secretKey = "";
 
-    /**
-     * {@code false} — стиль по умолчанию для Amazon S3 (virtual-hosted).
-     * {@code true} — path-style
-     */
     private boolean pathStyleAccess = false;
 
     /**

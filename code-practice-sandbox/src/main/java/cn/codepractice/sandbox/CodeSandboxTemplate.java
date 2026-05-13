@@ -40,8 +40,6 @@ public abstract class CodeSandboxTemplate implements CodeSandbox {
 
     /** Запуск javac для сохранённого файла. */
     protected ExecuteMessage compileFile(File userCodeFile) {
-        // Компилируем с release 11 для совместимости с локальным JDK sandbox.
-        // Скомпилированные классы корректно запускаются и в более новых JRE (например, Java 17).
         String compileCmd = String.format("javac -encoding utf-8 --release 11 %s", userCodeFile.getAbsoluteFile());
 
         try {

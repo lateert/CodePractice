@@ -3,10 +3,7 @@ package cn.codepractice.oj.common;
 import java.io.Serializable;
 import lombok.Data;
 
-/**
- * 
- *
- */
+
 @Data
 public class DeleteRequest implements Serializable {
 

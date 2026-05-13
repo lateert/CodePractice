@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 
 /**
- * Интеграционный тест слоя персистентности с реальной СУБД в Docker ({@link MySQLContainer}).
+ * Интеграционный тест слоя персистентности с СУБД в Docker ({@link MySQLContainer}).
  */
 @Testcontainers(disabledWithoutDocker = true)
 @MybatisTest

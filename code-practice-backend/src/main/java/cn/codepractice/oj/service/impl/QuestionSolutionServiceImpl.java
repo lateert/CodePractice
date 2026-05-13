@@ -76,15 +76,13 @@ public class QuestionSolutionServiceImpl extends ServiceImpl<QuestionSolutionMap
 
     @Override
     public Page<QuestionSolution> getSolutionPage(Page<QuestionSolution> questionSolutionPage, HttpServletRequest request) {
-
-        // 
+ 
         List<QuestionSolution> questionSolutionList = questionSolutionPage.getRecords();
 
         if (questionSolutionList.isEmpty()) {
             return questionSolutionPage;
         }
 
-        // map
         Set<Long> userIdSet = questionSolutionList.stream()
                 .map(QuestionSolution::getUserId)
                 .collect(Collectors.toSet());
@@ -98,7 +96,6 @@ public class QuestionSolutionServiceImpl extends ServiceImpl<QuestionSolutionMap
             solutionUserMap = new HashMap<>();
         }
 
-        // ,
         questionSolutionList = questionSolutionList.stream()
                 .peek(questionSolution -> {
                     questionSolution.setUserVO(solutionUserMap.getOrDefault(questionSolution.getUserId(), null));

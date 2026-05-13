@@ -31,7 +31,6 @@ public class JavaDockerCodeSandbox extends CodeSandboxTemplate {
 
         String userCodeParentPath = userCodeFile.getParentFile().getAbsolutePath();
 
-        // Только Docker: TCP endpoint, удобный для Docker Desktop на Windows.
         // Приоритет: переменная DOCKER_HOST, иначе tcp://localhost:2375
         String dockerHost = System.getenv("DOCKER_HOST");
         if (dockerHost == null || dockerHost.trim().isEmpty()) {
@@ -107,7 +106,7 @@ public class JavaDockerCodeSandbox extends CodeSandboxTemplate {
             StopWatch stopWatch = new StopWatch();
             String[] inputArgsArray = inputArgs.split(" ");
             // Передаём данные и как аргументы, и через stdin.
-            // Команда будет такой: sh -c "echo '1 2' | java -cp /app Main 1 2"
+            // Команда: sh -c "echo '1 2' | java -cp /app Main 1 2"
             String cmd = String.format("echo '%s' | java -cp /app Main %s", inputArgs, inputArgs);
             String[] cmdArray = new String[] {"sh", "-c", cmd};
             ExecCreateCmdResponse execCreateCmdResponse = dockerClient.execCreateCmd(containerId)

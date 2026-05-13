@@ -223,6 +223,14 @@ const onlyWithSubmissions = ref(false);
 const onlyWithoutAccepted = ref(false);
 const onlyHardQuestions = ref(false);
 
+const cleanProgressUserName = (raw: string | undefined | null): string => {
+  const t = (raw ?? "").trim();
+  if (!t || t.toLowerCase() === "null") {
+    return "";
+  }
+  return t;
+};
+
 const courseSummary = computed(() => {
   const s = courseProgress.value?.courseSummary;
   return {
@@ -319,7 +327,7 @@ const filteredStudents = computed(() => {
     if (!keyword) return true;
     return (
       (s.userAccount || "").toLowerCase().includes(keyword) ||
-      (s.userName || "").toLowerCase().includes(keyword)
+      cleanProgressUserName(s.userName).toLowerCase().includes(keyword)
     );
   });
 });
@@ -355,8 +363,9 @@ const progressData = computed(() => {
     const totalSubmit = Number(s.submitTotal ?? 0);
     const totalAccepted = Number(s.acceptedTotal ?? 0);
     const totalRate = totalSubmit ? `${((totalAccepted / totalSubmit) * 100).toFixed(2)}%` : "0.00%";
+    const displayName = cleanProgressUserName(s.userName);
     const row: Record<string, string | number> = {
-      student: s.userName ? `${s.userName} (${s.userAccount})` : s.userAccount,
+      student: displayName ? `${displayName} (${s.userAccount ?? ""})` : (s.userAccount ?? ""),
       totalSubmit,
       totalAccepted,
       totalRate,

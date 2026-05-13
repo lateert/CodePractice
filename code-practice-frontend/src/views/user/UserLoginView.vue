@@ -70,7 +70,6 @@ const handleSubmit = async () => {
       replace: true,
     });
   } else {
-    // Сообщения бэкенда могут быть на китайском, показываем дружелюбный русский текст
     if (res.code === 40100 || res.code === 40101) {
       Message.error("Ошибка входа: неверный логин или пароль");
     } else if (res.code === 40000) {

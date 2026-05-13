@@ -3,7 +3,7 @@
     {
       "name": "app.s3.enabled",
       "type": "java.lang.Boolean",
-      "description": "Use S3-compatible object storage (MinIO, AWS S3, etc.)."
+      "description": "Use S3-compatible object storage (MinIO, cloud providers, etc.)."
     },
     {
       "name": "app.s3.endpoint",
@@ -13,7 +13,7 @@
     {
       "name": "app.s3.region",
       "type": "java.lang.String",
-      "description": "AWS region id (also used by some S3 providers)."
+      "description": "Region id (required by some S3-compatible providers)."
     },
     {
       "name": "app.s3.bucket",
@@ -33,7 +33,7 @@
     {
       "name": "app.s3.path-style-access",
       "type": "java.lang.Boolean",
-      "description": "false for Amazon S3 (virtual-hosted); true for MinIO and custom endpoints."
+      "description": "false: virtual-hosted URLs for regional cloud S3; true: path-style (MinIO, custom gateways)."
     },
     {
       "name": "app.s3.public-base-url",

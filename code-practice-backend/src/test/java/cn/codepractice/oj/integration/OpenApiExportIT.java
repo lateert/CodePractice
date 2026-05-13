@@ -22,11 +22,6 @@ import java.nio.file.Path;
 
 /**
  * Поднимает приложение с MySQL и Redis в Docker, запрашивает SpringDoc OpenAPI и сохраняет JSON
- * в {@code code-practice-frontend/openapi.json} для {@code npm run generate:api:file}.
- * <p>
- * Запуск (из каталога {@code code-practice-backend}): {@code mvn test -Dtest=OpenApiExportIT}
- * <p>
- * Без Docker демона тест пропускается ({@code disabledWithoutDocker = true}).
  */
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

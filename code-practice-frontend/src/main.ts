@@ -44,7 +44,6 @@ const ruLikeLocale: any = {
 addI18nMessages({ "ru-RU": ruLikeLocale });
 useLocale("ru-RU");
 
-// Подавление шумного предупреждения ResizeObserver в оверлее dev.
 if (typeof window !== "undefined") {
   window.addEventListener("error", (event) => {
     const message = event?.message || "";

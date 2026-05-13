@@ -160,12 +160,28 @@ function isLikelyDirectImageUrl(raw: string): boolean {
     if (host === "www.google.com" || host === "google.com") {
       if (parsed.pathname.startsWith("/search") || parsed.pathname.startsWith("/url")) return false;
     }
+    // GitHub (OAuth): avatar_url без расширения в пути, только query (?v=4).
+    if (host === "avatars.githubusercontent.com" || host === "private-avatars.githubusercontent.com") {
+      return true;
+    }
+    if (host === "secure.gravatar.com" || host === "www.gravatar.com" || host === "gravatar.com") {
+      return true;
+    }
     const path = parsed.pathname.toLowerCase();
     if (path.includes("/file/local/")) return true;
     return /\.(png|jpe?g|webp|svg|gif|bmp|avif)(\?|$)/i.test(path);
   } catch {
     return false;
   }
+}
+
+/** Убирает артефакт Jackson/GitHub OAuth: в БД могло попасть буквально "null" вместо пустого имени. */
+function sanitizeStoredDisplayName(raw: string | undefined | null): string {
+  const t = (raw ?? "").trim();
+  if (!t || t.toLowerCase() === "null") {
+    return "";
+  }
+  return t;
 }
 
 const profilePreviewUrl = computed(() => {
@@ -179,10 +195,27 @@ const isLoggedIn = computed(() => {
   return Boolean(loginUser?.id && loginUser?.userRole && loginUser.userRole !== accessEnum.NOT_LOGIN);
 });
 
+/** Для OAuth GitHub в БД лежит {@code gh_<githubLogin>}; в шапке показываем сам github login. */
+function displayAccountLabel(account: string | undefined): string {
+  const a = (account ?? "").trim();
+  if (!a) {
+    return "";
+  }
+  const lower = a.toLowerCase();
+  if (lower.startsWith("gh_")) {
+    return a.slice(3);
+  }
+  return a;
+}
+
 const displayUserName = computed(() => {
   const raw = userStore.loginUser?.userName;
   const normalized = typeof raw === "string" ? raw.trim() : "";
-  return normalized && normalized.toLowerCase() !== "null" ? normalized : "Пользователь";
+  if (normalized && normalized.toLowerCase() !== "null") {
+    return normalized;
+  }
+  const fromAccount = displayAccountLabel(userStore.loginUser?.userAccount);
+  return fromAccount || "Пользователь";
 });
 
 const handleSelect = async (v: string | number | Record<string, unknown> | undefined) => {
@@ -195,7 +228,7 @@ const handleSelect = async (v: string | number | Record<string, unknown> | undef
   if (key === "profile") {
     const u = userStore.loginUser;
     profileForm.value = {
-      userName: (u?.userName ?? "").trim(),
+      userName: sanitizeStoredDisplayName(u?.userName),
       userAvatar: (u?.userAvatar ?? "").trim(),
       userProfile: (u?.userProfile ?? "").trim(),
     };
@@ -218,7 +251,7 @@ async function submitProfile() {
   const avatar = profileForm.value.userAvatar?.trim() ?? "";
   if (avatar && !isLikelyDirectImageUrl(avatar)) {
     Message.error(
-      "Укажите прямую ссылку на изображение (URL должен оканчиваться на .png, .jpg и т.п.) или загрузите файл. Ссылки на страницы поиска не подходят.",
+      "Укажите прямую ссылку на изображение (URL с расширением .png/.jpg и т.п., либо avatars.githubusercontent.com / Gravatar) или загрузите файл. Ссылки на страницы поиска не подходят.",
     );
     return;
   }

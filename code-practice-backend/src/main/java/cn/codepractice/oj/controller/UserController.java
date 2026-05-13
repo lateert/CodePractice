@@ -116,18 +116,19 @@ public class UserController {
         return ResultUtils.success(userService.getLoginUserVO(user));
     }
 
-    private static final String DEFAULT_PASSWORD = "12345678";
-
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (userAddRequest == null || StringUtils.isBlank(userAddRequest.getUserAccount())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        if (StringUtils.isBlank(userAddRequest.getUserPassword())
+                || userAddRequest.getUserPassword().length() < 8) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "Пароль обязателен и должен быть не короче 8 символов");
+        }
         User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
-        String rawPassword = StringUtils.isNotBlank(userAddRequest.getUserPassword())
-                ? userAddRequest.getUserPassword() : DEFAULT_PASSWORD;
+        String rawPassword = userAddRequest.getUserPassword();
         String encryptPassword = passwordEncoder.encode(rawPassword);
         user.setUserPassword(encryptPassword);
         boolean result = userService.save(user);

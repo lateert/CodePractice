@@ -10,9 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Пример изоляции внешнего HTTP API заглушкой WireMock (как в требованиях к интеграциям).
- */
 class WireMockExternalApiTest {
 
     private WireMockServer wireMockServer;

@@ -138,7 +138,7 @@ public class GithubOAuthService {
             GithubUserInfo info = new GithubUserInfo();
             info.id = json.path("id").asText();
             info.login = json.path("login").asText();
-            info.name = json.path("name").asText();
+            info.name = readOptionalGithubText(json.path("name"));
             info.avatarUrl = json.path("avatar_url").asText();
             return info;
         } catch (Exception e) {
@@ -156,7 +156,9 @@ public class GithubOAuthService {
         }
         User user = new User();
         user.setUserAccount(account);
-        user.setUserName(StringUtils.defaultIfBlank(userInfo.name, userInfo.login));
+        user.setUserName(StringUtils.defaultIfBlank(
+                normalizeGithubDisplayName(userInfo.name),
+                userInfo.login));
         user.setUserAvatar(userInfo.avatarUrl);
         user.setUserRole("user");
         user.setUserPassword(passwordEncoder.encode(RandomStringUtils.randomAlphanumeric(24)));
@@ -171,6 +173,26 @@ public class GithubOAuthService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_account", account);
         return userService.count(queryWrapper) > 0;
+    }
+
+    /** Пусто, если в JSON было null / отсутствует / пустая строка (не строка {@code "null"}). */
+    private static String readOptionalGithubText(JsonNode node) {
+        if (node == null || node.isNull() || node.isMissingNode()) {
+            return null;
+        }
+        String t = node.asText();
+        return StringUtils.trimToNull(t);
+    }
+
+    private static String normalizeGithubDisplayName(String name) {
+        if (name == null) {
+            return null;
+        }
+        String t = name.trim();
+        if (t.isEmpty() || "null".equalsIgnoreCase(t)) {
+            return null;
+        }
+        return t;
     }
 
     private void validateOauthConfigured() {
